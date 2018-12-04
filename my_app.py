@@ -1,12 +1,23 @@
+import os
+
 from flask import Flask, request, render_template, url_for, flash, redirect
 from forms import RegistrationForm, LoginForm
 from flask_sqlalchemy import SQLAlchemy
 import time
-
+from datetime import datetime
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://sit.db'
+sep=os.sep
+
+basedir = 'C:'+ sep +'Users'+ sep +'grodan'+ sep +'PycharmProjects'+ sep +'DNA-storage-web'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'app.db')
 # todo: make in an env var
 app.config['SECRET_KEY'] = '34533a9999c895e8da8a84fc029b88f8'
+
+db = SQLAlchemy(app)
+
+
+
+
 results = [
     {
         'build_number': '4',
