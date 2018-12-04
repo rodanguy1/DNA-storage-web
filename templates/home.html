@@ -1,17 +1,15 @@
 {% extends "layout.html" %}
 {% block content %}
-
-    {% for post in posts %}
+    <h2>Last X results:</h2>
+    {% for res in results %}
 
         <article class="media content-section">
           <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="#">Player: {{ post.name }}</a>
-              <small class="text-muted"> Date Of Birth: {{ post.date_of_birth }}</small>
-                <small class="text-muted">On My Free Time I Like To:{{ post.hobbies }}</small>
+            <div class="article-metadata" >
+              <a class="mr-2" href="#">Build #{{ res.build_number }}</a>
+              <small class="text-muted"> Build_on : {{ res.time_stamp }}</small>
+                <small class="text-muted">Run Result : {{res.result }}</small>
             </div>
-            <!--<h2><a class="article-title" href="#">{{ post.title }}</a></h2>-->
-            <!--<p class="article-content">{{ post.content }}</p>-->
           </div>
         </article>
     {% endfor %}

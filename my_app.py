@@ -1,33 +1,61 @@
-from flask import Flask, render_template, url_for, flash, redirect
+from flask import Flask, request, render_template, url_for, flash, redirect
 from forms import RegistrationForm, LoginForm
+from flask_sqlalchemy import SQLAlchemy
+import time
 
 app = Flask(__name__)
-
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://sit.db'
 # todo: make in an env var
 app.config['SECRET_KEY'] = '34533a9999c895e8da8a84fc029b88f8'
-
-posts = [
+results = [
     {
-        'name': 'Guy Rodan',
-        'date_of_birth': '8.3.1991',
-        'hobbies': 'netflix&chill'
+        'build_number': '4',
+        'time_stamp': time.strftime("%H:%M:%S"),
+        'result': 'Success'
     },
     {
-        'name': 'Dor Stern',
-        'date_of_birth': '11.11.1906',
-        'hobbies': 'getting Fucked By Gutter'
+        'build_number': '3',
+        'time_stamp': time.strftime("%H:%M:%S"),
+        'result': 'Success'
+    },
+    {
+        'build_number': '2',
+        'time_stamp': time.strftime("%H:%M:%S"),
+        'result': 'Success'
+    },
+    {
+        'build_number': '1',
+        'time_stamp': time.strftime("%H:%M:%S"),
+        'result': 'Success'
     },
 ]
 
 
 @app.route("/")
 def home():
-    return render_template('home.html', posts=posts)
+    return render_template('home.html', results=results)
 
 
 @app.route("/about")
 def about():
     return render_template('about.html')
+
+
+@app.route("/examples")
+def examples():
+    return render_template('examples.html')
+
+
+@app.route("/tool")
+def tool():
+    return render_template('tool.html')
+
+
+@app.route("/upload")
+def upload():
+    file = request.files['input_file']
+
+    return file.filename
 
 
 @app.route('/register', methods=['GET', 'POST'])
