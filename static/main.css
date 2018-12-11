@@ -51,10 +51,15 @@ a.article-title:hover {
   margin-right: 16px;
 }
 
-.article-metadata {
+.well {
   padding-bottom: 1px;
   margin-bottom: 4px;
   border-bottom: 1px solid #e3e3e3
+}
+
+.well2 {
+    border-style:solid;
+    background: cyan !important;
 }
 
 .article-metadata a:hover {

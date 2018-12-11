@@ -1,50 +1,13 @@
-import os
-
-from flask import Flask, request, render_template, url_for, flash, redirect
+from flask import request, render_template, url_for, flash, redirect
 from forms import RegistrationForm, LoginForm
-from flask_sqlalchemy import SQLAlchemy
-import time
-from datetime import datetime
-app = Flask(__name__)
-sep=os.sep
+from utils.config import get_app, send_results
 
-basedir = 'C:'+ sep +'Users'+ sep +'grodan'+ sep +'PycharmProjects'+ sep +'DNA-storage-web'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'app.db')
-# todo: make in an env var
-app.config['SECRET_KEY'] = '34533a9999c895e8da8a84fc029b88f8'
-
-db = SQLAlchemy(app)
-
-
-
-
-results = [
-    {
-        'build_number': '4',
-        'time_stamp': time.strftime("%H:%M:%S"),
-        'result': 'Success'
-    },
-    {
-        'build_number': '3',
-        'time_stamp': time.strftime("%H:%M:%S"),
-        'result': 'Success'
-    },
-    {
-        'build_number': '2',
-        'time_stamp': time.strftime("%H:%M:%S"),
-        'result': 'Success'
-    },
-    {
-        'build_number': '1',
-        'time_stamp': time.strftime("%H:%M:%S"),
-        'result': 'Success'
-    },
-]
+db, app = get_app(__name__)
 
 
 @app.route("/")
 def home():
-    return render_template('home.html', results=results)
+    return render_template('home.html')
 
 
 @app.route("/about")
@@ -62,11 +25,13 @@ def tool():
     return render_template('tool.html')
 
 
-@app.route("/upload")
+@app.route("/upload", methods=['GET', 'POST'])
 def upload():
-    file = request.files['input_file']
-
-    return file.filename
+    file1 = request.files['design']
+    file2 = request.files['after_alignment']
+    # todo: checl files format
+    send_results('rodanguy@gmail.com')
+    return render_template('after_run.html')
 
 
 @app.route('/register', methods=['GET', 'POST'])

@@ -4,13 +4,18 @@
 
         <div class="content-section">
             <div class="panel panel-default">
-            <h2 class="text-primary">Enter Your .CSV Input File</h2>
+            <h3 class="text-primary">Enter Your first .CSV Input File</h3>
             <br/>
                 <form method="POST" action="/upload" enctype="multipart/form-data">
                     <div class="form-group">
 
-                        <label for="inputFile"></label>
-                        <input type="file" accept=".csv" placeholder="your csv input file">
+                        <label for="design"></label>
+                        <input type="file" accept=".csv" name="design" >
+                    </div>
+                    <div class="form-group">
+                        <h3 class="text-primary">Enter Your first .CSV Input File</h3>
+                        <label for="after_alignment"></label>
+                        <input type="file" accept=".csv" name="after_alignment">
                     </div>
                     <h3 class="text-primary">Choose Your Analyzes:</h3>
                     <br />
