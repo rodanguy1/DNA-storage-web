@@ -4,7 +4,6 @@ from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from os.path import basename
-
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 

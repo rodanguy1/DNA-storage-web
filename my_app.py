@@ -2,6 +2,12 @@ from flask import request, render_template, url_for, flash, redirect
 from forms import RegistrationForm, LoginForm
 from utils.config import get_app, send_results
 
+
+#todo: get analizers input to mock function
+#todo: shape the "after_run.html" template
+#todo: create database API and implement it in register/login.html
+
+
 db, app = get_app(__name__)
 
 
