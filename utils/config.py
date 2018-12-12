@@ -7,6 +7,7 @@ from os.path import basename
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
+
 sep = os.sep
 # basedir = 'C:' + sep + 'Users' + sep + 'grodan' + sep + 'PycharmProjects' + sep + 'DNA-storage-web'
 basedir = os.getcwd()
