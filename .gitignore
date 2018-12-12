@@ -7,7 +7,9 @@ __pycache__/
 *.so
 *.idea
 
-
+*.iws
+workspace.xml
+tasks.xml
 # Distribution / packaging
 .Python
 env/
