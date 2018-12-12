@@ -1,3 +1,4 @@
+import itertools
 import os
 import smtplib
 from email.mime.application import MIMEApplication
@@ -7,16 +8,20 @@ from os.path import basename
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
+<<<<<<< .merge_file_a14940
 # addition
 
 
+=======
+# ############# WORKING DIR #####################################
+>>>>>>> .merge_file_a03252
 sep = os.sep
 # basedir = 'C:' + sep + 'Users' + sep + 'grodan' + sep + 'PycharmProjects' + sep + 'DNA-storage-web'
 basedir = os.getcwd()
 
+# ############# SET EMAIL #####################################
 email = os.environ.get('email')
 password = os.environ.get('email_password')
-# ############# SET EMAIL #####################################
 mail = None
 try:
     gmail = smtplib.SMTP('smtp.gmail.com', 587)
@@ -28,11 +33,13 @@ except:
     print("Couldn't setup email!!")
 
 
+# ############# APP CONFIG #####################################
+
 def get_app(name):
     app = Flask(name)
     # todo: make in an env var
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'app.db')
-    app.config['SECRET_KEY'] = '34533a9999c895e8da8a84fc029b88f8'
+    app.config['SECRET_KEY'] = os.environ.get('secret_key')  # '34533a9999c895e8da8a84fc029b88f8'
     app.config['MAIL_SERVER'] = 'smtp.gmail.com'
     app.config['MAIL_PORT'] = 465
     app.config['MAIL_USERNAME'] = email
@@ -48,13 +55,13 @@ def get_dir():
     return basedir
 
 
-def send_results(email):
+def send_results(email, run_id):
     msg = MIMEMultipart()
     msg['Subject'] = 'DNA-STORAGE-TOOL results'
     msg['To'] = ','.join([email])
     msg['From'] = os.environ.get('email')
     file = os.getcwd() + os.sep + 'utils' + os.sep + 'results.pdf'
-    msg.attach(MIMEText(' your DNA-STORAGE-TOOL results are now available to Download'))
+    msg.attach(MIMEText(' your DNA-STORAGE-TOOL results of run  number: '+run_id+' are now available to Download'))
     with open(file, "rb") as fil:
         part = MIMEApplication(
             fil.read(),
@@ -67,3 +74,11 @@ def send_results(email):
         mail.send_message(msg)
     except:
         print("COULDN'T SEND EMAIL")
+
+
+# ############## RUN ID ##############################
+_counter = itertools.count()
+
+
+def get_id():
+    return next(_counter)

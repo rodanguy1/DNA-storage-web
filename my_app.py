@@ -1,11 +1,9 @@
 from flask import request, render_template, url_for, flash, redirect
-from forms import RegistrationForm, LoginForm
-from utils.config import get_app, send_results
+from utils.forms import RegistrationForm, LoginForm
+from utils.config import get_app, send_results, get_id
 
-
-#todo: get analizers input to mock function
-#todo: shape the "after_run.html" template
-#todo: create database API and implement it in register/login.html
+# todo: shape the "after_run.html" template
+# todo: create database API and implement it in register/login.html
 
 
 db, app = get_app(__name__)
@@ -33,11 +31,16 @@ def tool():
 
 @app.route("/upload", methods=['GET', 'POST'])
 def upload():
-    file1 = request.files['design']
-    file2 = request.files['after_alignment']
+    design = request.files['design']
+    after_align = request.files['after_alignment']
     # todo: checl files format
-    send_results('rodanguy@gmail.com')
-    return render_template('after_run.html')
+    analysis = request.form.getlist('analysis')
+    for a in analysis:
+        print(a)
+    run_id = '#'+str(get_id())
+
+    send_results('rodanguy@gmail.com', run_id)
+    return render_template('after_run.html', run_id=run_id)
 
 
 @app.route('/register', methods=['GET', 'POST'])
