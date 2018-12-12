@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block content %}
+
+
+        <div class="content-section">
+            <div class="panel panel-default">
+            <h3 class="text-primary">Enter Your first .CSV Input File</h3>
+            <br/>
+                <form method="POST" action="/upload" enctype="multipart/form-data">
+                    <div class="form-group">
+
+                        <label for="design"></label>
+                        <input type="file" accept=".csv" name="design" >
+                    </div>
+                    <div class="form-group">
+                        <h3 class="text-primary">Enter Your first .CSV Input File</h3>
+                        <label for="after_alignment"></label>
+                        <input type="file" accept=".csv" name="after_alignment">
+                    </div>
+                    <h3 class="text-primary">Choose Your Analyzes:</h3>
+                    <br />
+                    <div>
+                        <label><input type="checkbox" name="field_name" value="1" checked> analysis 1</label>
+                        <label><input type="checkbox" name="field_name" value="2"> analysis 2</label>
+                        <label><input type="checkbox" name="field_name" value="3"> analysis 3</label>
+                        <label><input type="checkbox" name="field_name" value="4"> analysis 4</label><br/>
+                        <label><input type="checkbox" name="field_name" value="5"> analysis 5</label>
+                        <label><input type="checkbox" name="field_name" value="6"> analysis 6</label>
+                        <label><input type="checkbox" name="field_name" value="7"> analysis 7</label>
+                        <label><input type="checkbox" name="field_name" value="8"> analysis 8</label>
+                    </div>
+                    <br />
+                    <button type="submit" class="btn btn-outline-primary">Run Tool</button>
+                    <br />
+                </form>
+            </div>
+        </div>
+
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>Last X results:</h2>
+    {% for res in results %}
+
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata" >
+              <a class="mr-2" href="#">Build #{{ res.build_number }}</a>
+              <small class="text-muted"> Build_on : {{ res.time_stamp }}</small>
+                <small class="text-muted">Run Result : {{res.result }}</small>
+            </div>
+          </div>
+        </article>
+    {% endfor %}
+
+{% endblock %}
