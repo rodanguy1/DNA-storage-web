@@ -6,6 +6,11 @@ from email.mime.text import MIMEText
 from os.path import basename
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+import itertools
+import datetime
+import subprocess
+import sys
+
 
 # ############# WORKING DIR #####################################
 sep = os.sep
@@ -28,6 +33,8 @@ except:
 
 # ############# APP CONFIG #####################################
 
+
+
 def get_app(name):
     app = Flask(name)
     # todo: make in an env var
@@ -40,12 +47,27 @@ def get_app(name):
     app.config['MAIL_USE_TLS'] = False
     app.config['MAIL_USE_SSL'] = True
     db = SQLAlchemy(app)
-
     return db, app
 
 
 def get_dir():
     return basedir
+
+def DebugPrint(message):
+    cur_time = datetime.datetime.now().time()
+    print("\n*****DEBUG: "+str(cur_time)+" - " +str(message)+" ****************\n")
+
+
+def RunApp(tool_path,alignment_path, design_path):
+    cmd = sys.executable + ' ' + tool_path + ' ' + alignment_path + ' ' + design_path
+    DebugPrint('b4 process')
+    process_output = subprocess.check_output(cmd)
+    DebugPrint('after process. output is :')
+    DebugPrint(process_output)
+    if os.path.exists(process_output):
+        DebugPrint('file is existing')
+    else:
+        DebugPrint('file is none')
 
 
 def send_results(email, run_id):
