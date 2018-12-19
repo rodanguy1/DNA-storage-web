@@ -1,12 +1,11 @@
-from flask import request, render_template, url_for, flash, redirect
-# from utils import *
-from utils.config import *
-# get_app, send_results, get_id
-from utils.forms import RegistrationForm, LoginForm
-import subprocess
-import sys
-import os
 import threading
+from flask import request, render_template, url_for, flash, redirect
+from werkzeug.utils import secure_filename
+
+from utils.common import debug_print, run_dna_tool
+from utils.config import *
+from utils.forms import RegistrationForm, LoginForm, ToolForm
+
 # todo: shape the "after_run.html" template
 # todo: create database API and implement it in register/login.html
 
@@ -30,10 +29,10 @@ def examples():
     return render_template('examples.html')
 
 
-@app.route("/tool")
+@app.route("/tool", methods=['GET', 'POST'])
 def tool():
-    return render_template('tool.html')
-
+    form = ToolForm()
+    return render_template('tool.html', form=form)
 
 
 @app.route("/after_run")
@@ -41,62 +40,27 @@ def after_run():
     return render_template('after_run.html')
 
 
-
-
-
 @app.route("/upload", methods=['GET', 'POST'])
 def upload():
-    input_valid = True
-    try :
-        design_file = request.files['design']
-    except Exception as e:
-        input_valid = False
-        flash('You are missing the Design File.',"error")
-    try:
-        alignment_file = request.files['after_alignment']
-    except:
-        input_valid = False
-        flash('You are missing the Alignment File.',"error")
-    try:
-        # todo: checl files format
-        analysis = request.form.getlist('analysis')
-    except:
-        flash("You are didn't choose any analyzers.","error")
-    analyser_given = False
-    if len(analysis) > 0 :
-        DebugPrint('the len is '+str(len(analysis)))
-    for analysis_name in analysis:
-        DebugPrint(analysis_name)
-        if analysis_name == 'on':
-            analyser_given = True
-    DebugPrint('end of for')
-    if analyser_given is False:
-        flash("You are didn't choose any analyzers.","error")
-        input_valid = False
-
-    if input_valid is True:
-        # TODO - change send_results()
-        # send_results('rodanguy@gmail.com', 1)
-        # TODO - check input is my responsibility?
-        DebugPrint('legal params')
-        design_path = ".\\" + design_file.filename
+    analysis = request.form.getlist("analysis")
+    print(analysis)
+    form = ToolForm()
+    if form.validate_on_submit():
+        design_file = form.design.data
+        file_name = secure_filename(design_file.filename)
+        design_path = get_dir() + os.sep + file_name
         design_file.save(design_path)
-        alignment_path = ".\\" + alignment_file.filename
-        alignment_file.save(alignment_path)
-        tool_path = 'C:\Users\eitanfg\PycharmProjects\web\DNA-storage-web-new\DNA-storage-web\utils\mock_tool.py'
-        if os.path.exists(tool_path):
-            os.chmod(tool_path,777)
-            DebugPrint(os.access(tool_path, os.X_OK))
-
-        thread_for_app = threading.Thread(target=RunApp,args=(tool_path,alignment_path,design_path))
-        thread_for_app.start()
+        after_align_file = form.after_align.data
+        file_name = secure_filename(after_align_file.filename)
+        after_align_path = get_dir() + os.sep + file_name
+        after_align_file.save(after_align_path)
+        tool_path = get_tool_path()
+        threading.Thread(target=run_dna_tool, args=(tool_path, after_align_path, design_path)).start()
         return redirect(url_for('after_run'))
     else:
-        DebugPrint('bad params')
-        return render_template('tool.html')
 
-
-
+        debug_print('bad params')
+        return render_template('tool.html', title='DNA-STORAGE-TOOL', form=form)
 
 
 @app.route('/register', methods=['GET', 'POST'])

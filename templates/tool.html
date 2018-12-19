@@ -2,39 +2,60 @@
 {% block content %}
 
 
-        <div class="content-section">
-            <div class="panel panel-default">
-            <h3 class="text-primary">Enter Your first .CSV Input File</h3>
+    <div class="content-section">
+        <div class="panel panel-default">
+            <h3 class="text-primary">DNA STORAGE TOOL Input :</h3>
             <br/>
-                <form method="POST" action="/upload" enctype="multipart/form-data">
-                    <div class="form-group">
+            <form method="POST" action="/upload" enctype="multipart/form-data">
+                <div class="form-group">
+                    {{ form.design.label(class="form-control-label") }}
+                    {% if form.design.errors %}
+                    {{ form.design(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.design.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.design(class="form-control") }}
+                    {% endif %}
+                    <!--<label for="design"></label>-->
+                    <!--<input type="file" accept=".csv" name="design" >-->
+                </div>
+                <div class="form-group">
+                    {{ form.after_align.label(class="form-control-label") }}
+                    {% if form.after_align.errors %}
+                    {{ form.after_align(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.after_align.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.after_align(class="form-control") }}
+                    {% endif %}
+                    <!--<label for="after_alignment"></label>-->
+                    <!--<input type="file" accept=".csv" name="after_alignment">-->
+                </div>
+                <h3 class="text-primary">Choose Your Analyzes:</h3>
+                <br/>
+                <div class="form-check">
 
-                        <label for="design"></label>
-                        <input type="file" accept=".csv" name="design" >
-                    </div>
-                    <div class="form-group">
-                        <h3 class="text-primary">Enter Your first .CSV Input File</h3>
-                        <label for="after_alignment"></label>
-                        <input type="file" accept=".csv" name="after_alignment">
-                    </div>
-                    <h3 class="text-primary">Choose Your Analyzes:</h3>
-                    <br />
-                    <div>
-                        <label><input type="checkbox" name="analysis" value="on" checked> analysis 1</label>
-                        <label><input type="checkbox" name="analysis" value="on"> analysis 2</label>
-                        <label><input type="checkbox" name="analysis" value="on"> analysis 3</label>
-                        <label><input type="checkbox" name="analysis" value="on"> analysis 4</label><br/>
-                        <label><input type="checkbox" name="analysis" value="on"> analysis 5</label>
-                        <label><input type="checkbox" name="analysis" value="on"> analysis 6</label>
-                        <label><input type="checkbox" name="analysis" value="on"> analysis 7</label>
-                        <label><input type="checkbox" name="analysis" value="on"> analysis 8</label>
-                    </div>
-                    <br />
-                    <button type="submit" class="btn btn-outline-primary">Run Tool</button>
-                    <br />
-                </form>
-            </div>
+                    <label class="form-check-label"><input type="checkbox" name="analysis" value="1" checked> analysis 1</label>
+                    <label class="form-check-label"><input type="checkbox" name="analysis" value="2"> analysis 2</label>
+                    <label class="form-check-label"><input type="checkbox" name="analysis" value="3"> analysis 3</label>
+                    <label class="form-check-label"><input type="checkbox" name="analysis" value="4"> analysis 4</label><br/>
+                    <label class="form-check-label"><input type="checkbox" name="analysis" value="5"> analysis 5</label>
+                    <label class="form-check-label"><input type="checkbox" name="analysis" value="6"> analysis 6</label>
+                    <label class="form-check-label"><input type="checkbox" name="analysis" value="7"> analysis 7</label>
+                    <label class="form-check-label"><input type="checkbox" name="analysis" value="8"> analysis 8</label>
+                </div>
+                <br/>
+                <button type="submit" class="btn btn-outline-primary">Run Tool</button>
+                <br/>
+            </form>
         </div>
+    </div>
 
 
 {% endblock %}
