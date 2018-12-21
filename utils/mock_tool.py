@@ -1,7 +1,7 @@
 import csv
 import os
 import sys
-from datetime import time
+from time import strftime, gmtime
 
 from reportlab.pdfgen import canvas
 
@@ -37,7 +37,7 @@ def run_tool(design):
         # print("****")
         pdf_file.save()
         # print('****after')
-        send_results('rodanguy@gmail.com', time)
+        send_results('rodanguy@gmail.com', strftime("%Y-%m-%d %H:%M:%S", gmtime()))
         return pdf_file
 
 

@@ -2,60 +2,65 @@
 {% block content %}
 
 
-    <div class="content-section">
-        <div class="panel panel-default">
-            <h3 class="text-primary">DNA STORAGE TOOL Input :</h3>
+<div class="content-section">
+    <div class="panel panel-default">
+        <h3 class="text-primary">DNA STORAGE TOOL Input :</h3>
+        <br/>
+        <form method="POST" action="/upload" enctype="multipart/form-data">
+             {{ form.csrf_token }}
+            <div class="form-group">
+                {{ form.design.label(class="form-control-label") }}
+                {% if form.design.errors %}
+                {{ form.design(class="form-control-file form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.design.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.design(class="form-control-file") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.after_align.label(class="form-control-label") }}
+                {% if form.after_align.errors %}
+                {{ form.after_align(class="form-control-file form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.after_align.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.after_align(class="form-control-file") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.analysis.label(class="form-check-label", for="analysis") }}
+                <br/>
+                {% if form.analysis.errors %}
+                {{ form.analysis(class="form-control form-control-lg is-invalid") }}
+                {% for a in form.analysis %}
+                {{ a(class="form-check form-check- is-invalid") }}
+                {% endfor %}
+                <div class="invalid-feedback">
+                    {% for error in form.analysis.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {% for a in form.analysis %}
+                {{ a(class="form-check form-check-inline") }}
+                {{ a.label(class="form-check-label form-check-inline" , checked=1) }}
+                {% endfor %}
+                <!--{{ form.analysis(class="form-check form-check-inline") }}-->
+                {% endif %}
+            </div>
             <br/>
-            <form method="POST" action="/upload" enctype="multipart/form-data">
-                <div class="form-group">
-                    {{ form.design.label(class="form-control-label") }}
-                    {% if form.design.errors %}
-                    {{ form.design(class="form-control form-control-lg is-invalid") }}
-                    <div class="invalid-feedback">
-                        {% for error in form.design.errors %}
-                        <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    {% else %}
-                    {{ form.design(class="form-control") }}
-                    {% endif %}
-                    <!--<label for="design"></label>-->
-                    <!--<input type="file" accept=".csv" name="design" >-->
-                </div>
-                <div class="form-group">
-                    {{ form.after_align.label(class="form-control-label") }}
-                    {% if form.after_align.errors %}
-                    {{ form.after_align(class="form-control form-control-lg is-invalid") }}
-                    <div class="invalid-feedback">
-                        {% for error in form.after_align.errors %}
-                        <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    {% else %}
-                    {{ form.after_align(class="form-control") }}
-                    {% endif %}
-                    <!--<label for="after_alignment"></label>-->
-                    <!--<input type="file" accept=".csv" name="after_alignment">-->
-                </div>
-                <h3 class="text-primary">Choose Your Analyzes:</h3>
-                <br/>
-                <div class="form-check">
-
-                    <label class="form-check-label"><input type="checkbox" name="analysis" value="1" checked> analysis 1</label>
-                    <label class="form-check-label"><input type="checkbox" name="analysis" value="2"> analysis 2</label>
-                    <label class="form-check-label"><input type="checkbox" name="analysis" value="3"> analysis 3</label>
-                    <label class="form-check-label"><input type="checkbox" name="analysis" value="4"> analysis 4</label><br/>
-                    <label class="form-check-label"><input type="checkbox" name="analysis" value="5"> analysis 5</label>
-                    <label class="form-check-label"><input type="checkbox" name="analysis" value="6"> analysis 6</label>
-                    <label class="form-check-label"><input type="checkbox" name="analysis" value="7"> analysis 7</label>
-                    <label class="form-check-label"><input type="checkbox" name="analysis" value="8"> analysis 8</label>
-                </div>
-                <br/>
-                <button type="submit" class="btn btn-outline-primary">Run Tool</button>
-                <br/>
-            </form>
-        </div>
+            <button type="submit" class="btn btn-outline-primary">Run Tool</button>
+            <br/>
+        </form>
     </div>
+</div>
 
 
 {% endblock %}

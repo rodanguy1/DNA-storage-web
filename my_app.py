@@ -1,5 +1,6 @@
 import threading
 from flask import request, render_template, url_for, flash, redirect
+from flask_wtf.csrf import CSRFError
 from werkzeug.utils import secure_filename
 
 from utils.common import debug_print, run_dna_tool
@@ -12,6 +13,8 @@ from utils.forms import RegistrationForm, LoginForm, ToolForm
 
 db, app = get_app(__name__)
 app.config['SECRET_KEY'] = '34533a9999c895e8da8a84fc029b88f8'
+choices = [['analysis 1', 'analysis 1'], ['analysis 2', 'analysis 2'], ['analysis 3', 'analysis 3'],
+           ['analysis 4', 'analysis 4'], ['analysis 5', 'analysis 5']]
 
 
 @app.route("/")
@@ -29,9 +32,10 @@ def examples():
     return render_template('examples.html')
 
 
-@app.route("/tool", methods=['GET', 'POST'])
+@app.route("/tool")
 def tool():
-    form = ToolForm()
+    form = ToolForm(choices=choices)
+    form.analysis.choices = choices
     return render_template('tool.html', form=form)
 
 
@@ -42,24 +46,22 @@ def after_run():
 
 @app.route("/upload", methods=['GET', 'POST'])
 def upload():
-    analysis = request.form.getlist("analysis")
-    print(analysis)
     form = ToolForm()
     if form.validate_on_submit():
         design_file = form.design.data
         file_name = secure_filename(design_file.filename)
-        design_path = get_dir() + os.sep + file_name
+        design_path = get_dir() + os.sep + 'outputs' + os.sep + file_name
         design_file.save(design_path)
         after_align_file = form.after_align.data
         file_name = secure_filename(after_align_file.filename)
-        after_align_path = get_dir() + os.sep + file_name
+        after_align_path = get_dir() + os.sep + 'outputs' + os.sep + file_name
         after_align_file.save(after_align_path)
         tool_path = get_tool_path()
         threading.Thread(target=run_dna_tool, args=(tool_path, after_align_path, design_path)).start()
         return redirect(url_for('after_run'))
     else:
 
-        debug_print('bad params')
+        debug_print(form.errors)
         return render_template('tool.html', title='DNA-STORAGE-TOOL', form=form)
 
 
@@ -67,7 +69,7 @@ def upload():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        flash('Account created for {form.username.data}', 'success')
+        flash('Account created for '+form.username.data, 'success')
         return redirect(url_for('home'))
     return render_template('register.html', title='Register', form=form)
 
@@ -82,6 +84,12 @@ def login():
         else:
             flash('Login Unsuccessful. Please check username and password', 'danger')
     return render_template('login.html', title='Login', form=form)
+
+
+@app.errorhandler(CSRFError)
+def handle_csrf_error(e):
+    print(e.description)
+    return redirect(url_for('tool'))
 
 
 if __name__ == '__main__':

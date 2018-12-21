@@ -12,6 +12,8 @@ import subprocess
 import sys
 
 # ############# WORKING DIR #####################################
+from flask_wtf import CsrfProtect
+
 sep = os.sep
 # basedir = 'C:' + sep + 'Users' + sep + 'grodan' + sep + 'PycharmProjects' + sep + 'DNA-storage-web'
 basedir = os.getcwd()
@@ -35,10 +37,12 @@ except:
 
 
 def get_app(name):
+    csrf = CsrfProtect()
     app = Flask(name)
     # todo: make in an env var
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'app.db')
     app.config['SECRET_KEY'] = os.environ.get('secret_key')  # '34533a9999c895e8da8a84fc029b88f8'
+    app.config['WTF_CSRF_SECRET_KEY'] = os.environ.get('secret_key')
     app.config['MAIL_SERVER'] = 'smtp.gmail.com'
     app.config['MAIL_PORT'] = 465
     app.config['MAIL_USERNAME'] = email
@@ -46,6 +50,7 @@ def get_app(name):
     app.config['MAIL_USE_TLS'] = False
     app.config['MAIL_USE_SSL'] = True
     db = SQLAlchemy(app)
+    csrf.init_app(app)
     return db, app
 
 
