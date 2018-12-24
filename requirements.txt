@@ -1,0 +1,6 @@
+WTForms==2.2.1
+Werkzeug==0.14.1
+reportlab==3.5.12
+Flask==1.0.2
+Flask_WTF==0.14.2
+Flask_SQLAlchemy==2.3.2

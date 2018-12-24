@@ -6,7 +6,6 @@ from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from os.path import basename
-
 from utils.config import get_mail, get_dir
 
 
@@ -15,8 +14,8 @@ def debug_print(message):
     print("\n*****DEBUG: " + str(cur_time) + " - " + str(message) + " ****************\n")
 
 
-def run_dna_tool(tool_path, alignment_path, design_path):
-    cmd = sys.executable + ' ' + tool_path + ' ' + alignment_path + ' ' + design_path
+def run_dna_tool(tool_path, alignment_path, design_path, analyzes ,email):
+    cmd = sys.executable + ' ' + tool_path + ' ' + alignment_path + ' ' + design_path + ' ' + analyzes+ ' ' + email
     debug_print('b4 process')
     process_output = subprocess.check_output(cmd)
     debug_print('after process. output is :')

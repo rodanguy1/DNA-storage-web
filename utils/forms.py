@@ -1,11 +1,11 @@
-from flask_wtf import FlaskForm, widgets
+from flask_wtf import FlaskForm
 from flask_wtf.file import FileRequired, FileAllowed
-from wtforms import SelectField, StringField, PasswordField, SubmitField, BooleanField, FileField, SelectMultipleField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, FileField, SelectMultipleField
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, required
 from wtforms.widgets import CheckboxInput, ListWidget
 
-choices = [['analysis 1', 'analysis 1'], ['analysis 2', 'analysis 2'], ['analysis 3', 'analysis 3'],
-           ['analysis 4', 'analysis 4'], ['analysis 5', 'analysis 5']]
+choices = [['1', 'analysis 1'], ['2', 'analysis 2'], ['3', 'analysis 3'],
+           ['4', 'analysis 4'], ['5', 'analysis 5']]
 
 
 class RegistrationForm(FlaskForm):
@@ -26,11 +26,6 @@ class LoginForm(FlaskForm):
 def validate_multiple(form, field):
     if len(field.data) == 0:
         raise ValidationError('please choose your analysis')
-#
-#
-# class MultiCheckboxField(SelectMultipleField):
-#     widget = widgets.ListWidget(prefix_label=False)
-#     option_widget = widgets.CheckboxInput()
 
 
 class MultiCheckboxField(SelectMultipleField):
@@ -50,6 +45,7 @@ class ToolForm(FlaskForm):
     after_align = FileField('Enter Your After alignment CSV File:',
                             validators=[FileRequired(), FileAllowed(['csv'], 'CSV files only')])
     analysis = MultiCheckboxField(
-        'Please Choose Your Analyzes: (at least one analysis)',
-        choices=choices, validators=[validate_multiple]
+        'Please Choose Your Analyzes: (at least one analysis)', coerce=int,
+        choices=choices, validators=[required()]
     )
+    email = StringField('Please Enter Your Email:', validators=[DataRequired(), Email()])

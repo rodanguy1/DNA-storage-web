@@ -1,20 +1,18 @@
 import threading
-from flask import request, render_template, url_for, flash, redirect
+from flask import render_template, url_for, flash, redirect
 from flask_wtf.csrf import CSRFError
 from werkzeug.utils import secure_filename
-
 from utils.common import debug_print, run_dna_tool
 from utils.config import *
 from utils.forms import RegistrationForm, LoginForm, ToolForm
 
-# todo: shape the "after_run.html" template
 # todo: create database API and implement it in register/login.html
 
 
 db, app = get_app(__name__)
 app.config['SECRET_KEY'] = '34533a9999c895e8da8a84fc029b88f8'
-choices = [['analysis 1', 'analysis 1'], ['analysis 2', 'analysis 2'], ['analysis 3', 'analysis 3'],
-           ['analysis 4', 'analysis 4'], ['analysis 5', 'analysis 5']]
+choices = [['1', 'analysis 1'], ['2', 'analysis 2'], ['3', 'analysis 3'],
+           ['4', 'analysis 4'], ['5', 'analysis 5']]
 
 
 @app.route("/")
@@ -57,10 +55,11 @@ def upload():
         after_align_path = get_dir() + os.sep + 'outputs' + os.sep + file_name
         after_align_file.save(after_align_path)
         tool_path = get_tool_path()
-        threading.Thread(target=run_dna_tool, args=(tool_path, after_align_path, design_path)).start()
+        email = form.email
+        analyzes = form.analysis
+        threading.Thread(target=run_dna_tool, args=(tool_path, after_align_path, design_path, analyzes, email)).start()
         return redirect(url_for('after_run'))
     else:
-
         debug_print(form.errors)
         return render_template('tool.html', title='DNA-STORAGE-TOOL', form=form)
 
@@ -69,7 +68,7 @@ def upload():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        flash('Account created for '+form.username.data, 'success')
+        flash('Account created for ' + form.username.data, 'success')
         return redirect(url_for('home'))
     return render_template('register.html', title='Register', form=form)
 
@@ -93,4 +92,6 @@ def handle_csrf_error(e):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # app.run(host='132.69.8.7', port=80 , debug=True)
+     app.run(debug=True)
+
