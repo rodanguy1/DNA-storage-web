@@ -1,16 +1,10 @@
+import itertools
+import json
 import os
 import smtplib
-from email.mime.application import MIMEApplication
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from os.path import basename
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-import itertools
-import datetime
-import subprocess
-import sys
-
 # ############# WORKING DIR #####################################
 from flask_wtf import CsrfProtect
 
@@ -20,8 +14,19 @@ basedir = os.getcwd()
 tool_name = 'mock_tool.py'
 tool_path = basedir + sep + 'utils' + sep + tool_name
 # ############# SET EMAIL #####################################
-email = os.environ.get('email')
-password = os.environ.get('email_password')
+
+config = []
+
+if os.environ.get('mode') == 'prod':
+    with open('/etc/config.json') as config_file:
+        config = json.load('config_file')
+    email= config.get('email')
+    password = config.get('email_password')
+    key = config.get('secret_key')
+else:
+    email = os.environ.get('email')
+    password = os.environ.get('email_password')
+    key = os.environ.get('secret_key')
 mail = None
 try:
     gmail = smtplib.SMTP('smtp.gmail.com', 587)
@@ -41,8 +46,8 @@ def get_app(name):
     app = Flask(name)
     # todo: make in an env var
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'app.db')
-    app.config['SECRET_KEY'] = os.environ.get('secret_key')  # '34533a9999c895e8da8a84fc029b88f8'
-    app.config['WTF_CSRF_SECRET_KEY'] = os.environ.get('secret_key')
+    app.config['SECRET_KEY'] = key
+    app.config['WTF_CSRF_SECRET_KEY'] = key
     app.config['MAIL_SERVER'] = 'smtp.gmail.com'
     app.config['MAIL_PORT'] = 465
     app.config['MAIL_USERNAME'] = email
