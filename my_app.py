@@ -10,7 +10,7 @@ from utils.forms import RegistrationForm, LoginForm, ToolForm
 
 
 db, app = get_app(__name__)
-app.config['SECRET_KEY'] = '34533a9999c895e8da8a84fc029b88f8'
+app.config['SECRET_KEY'] = key
 choices = [['1', 'analysis 1'], ['2', 'analysis 2'], ['3', 'analysis 3'],
            ['4', 'analysis 4'], ['5', 'analysis 5']]
 
