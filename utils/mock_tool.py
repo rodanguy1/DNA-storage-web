@@ -9,7 +9,7 @@ from utils.config import get_dir
 
 def run_tool(user_design_file, analyzes, user_email):
     for a in analyzes:
-        print(a)
+        print(str(a))
     dest = get_dir() + os.sep + 'Output.pdf'
     pdf_file = canvas.Canvas(dest)
     pdf_file.drawString(0, 0, "hello whats up?")
@@ -34,6 +34,6 @@ def run_tool(user_design_file, analyzes, user_email):
 if __name__ == '__main__':
     design = sys.argv[1]
     alignment = sys.argv[2]
-    analyzes = sys.argv[3]
+    analyzes = sys.argv[3].split(',')
     email = sys.argv[4]
     run_tool(design, analyzes, email)

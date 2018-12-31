@@ -19,8 +19,8 @@ config = []
 
 if os.environ.get('mode') == 'prod':
     with open('/etc/config.json') as config_file:
-        config = json.load('config_file')
-    email= config.get('email')
+        config = json.load(config_file)
+    email = config.get('email')
     password = config.get('email_password')
     key = config.get('secret_key')
 else:

@@ -11,8 +11,8 @@ from utils.forms import RegistrationForm, LoginForm, ToolForm
 
 db, app = get_app(__name__)
 app.config['SECRET_KEY'] = key
-choices = [['1', 'analysis 1'], ['2', 'analysis 2'], ['3', 'analysis 3'],
-           ['4', 'analysis 4'], ['5', 'analysis 5']]
+choices = [['a', 'analysis 1'], ['b', 'analysis 2'], ['c', 'analysis 3'],
+           ['d', 'analysis 4'], ['e', 'analysis 5']]
 
 
 @app.route("/")
@@ -56,8 +56,9 @@ def upload():
         after_align_file.save(after_align_path)
         tool_path = get_tool_path()
         email = form.email
-        analyzes = form.analysis
-        threading.Thread(target=run_dna_tool, args=(tool_path, after_align_path, design_path, analyzes, email)).start()
+        analyzes = form.analysis.data
+        threading.Thread(target=run_dna_tool,
+                         args=(tool_path, after_align_path, design_path, str.join(',', analyzes), email.data)).start()
         return redirect(url_for('after_run'))
     else:
         debug_print(form.errors)
@@ -93,5 +94,4 @@ def handle_csrf_error(e):
 
 if __name__ == '__main__':
     # app.run(host='132.69.8.7', port=80 , debug=True)
-     app.run(debug=True)
-
+    app.run(debug=True)
