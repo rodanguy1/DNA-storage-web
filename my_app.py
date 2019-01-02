@@ -35,7 +35,7 @@ def examples():
 @app.route("/tool")
 def tool():
     form = ToolForm(choices=choices)
-    form.analysis.choices = choices
+    # form.analysis.choices = choices
     return render_template('tool.html', form=form)
 
 
@@ -53,8 +53,8 @@ def upload():
         SaveFilesOnServer(form_files,run_id)
         tool_path = get_tool_path()
         email = form.email
-        analyzes = form.analysis
-        threading.Thread(target=RunDNATool, args=(tool_path,run_id, analyzes, email)).start()
+        # analyzes = form.analysis
+        threading.Thread(target=RunDNATool, args=(tool_path,run_id, email)).start()
         return redirect(url_for('after_run',email))
     else:
         debug_print(form.errors)

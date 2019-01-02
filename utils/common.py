@@ -25,7 +25,7 @@ def debug_print(message):
     print("\n*****DEBUG: " + str(cur_time) + " - " + str(message) + " ****************\n")
 
 
-def RunDNATool(tool_path,run_id, analyzes ,email):
+def RunDNATool(tool_path,run_id,email):
     cmd = sys.executable + ' ' + tool_path + ' ' + run_id
     debug_print('b4 process. the cmd is '+cmd)
     process_output = subprocess.check_output(cmd)

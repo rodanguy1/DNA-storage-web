@@ -4,9 +4,8 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField, FileF
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, required
 from wtforms.widgets import CheckboxInput, ListWidget
 
-choices = [['1', 'analysis 1'], ['2', 'analysis 2'], ['3', 'analysis 3'],
-           ['4', 'analysis 4'], ['5', 'analysis 5']]
-
+choices = [['a', 'analysis 1'], ['b', 'analysis 2'], ['c', 'analysis 3'],
+           ['d', 'analysis 4'], ['e', 'analysis 5']]
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
@@ -49,8 +48,8 @@ class ToolForm(FlaskForm):
     reads = FileField('Enter your Reads file:',
                             validators=[FileRequired(), FileAllowed(['fastq'], 'fastq files only')])
 
-    analysis = MultiCheckboxField(
-        'Please Choose Your Analyzes: (at least one analysis)', coerce=int,
-        choices=choices, validators=[required()]
-    )
+    # analysis = MultiCheckboxField(
+    #     'Please Choose Your Analyzes: (at least one analysis)', coerce=int,
+    #     choices=choices, validators=[required()]
+    # )
     email = StringField('Please Enter Your Email:', validators=[DataRequired(), Email()])
