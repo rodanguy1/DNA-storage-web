@@ -10,7 +10,7 @@ from utils.config import get_dir
 directory_path = get_dir() + os.sep + 'input_files_dir' + os.sep
 
 def run_tool(run_id):
-    out_path = get_dir() + os.sep + 'Output.pdf'
+    out_path = directory_path+run_id +'_output.pdf'
     pdf_file = canvas.Canvas(out_path)
     pdf_file.drawString(0, 0, "hello whats up?")
     os.chmod(directory_path+run_id+'_design.csv',755)
@@ -26,6 +26,7 @@ def run_tool(run_id):
             if y % 100 == 0:
                 pdf_file.showPage()
         pdf_file.save()
+
         return pdf_file
 
 

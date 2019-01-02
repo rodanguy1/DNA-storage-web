@@ -48,8 +48,7 @@ class ToolForm(FlaskForm):
     reads = FileField('Enter your Reads file:',
                             validators=[FileRequired(), FileAllowed(['fastq'], 'fastq files only')])
 
-    # analysis = MultiCheckboxField(
-    #     'Please Choose Your Analyzes: (at least one analysis)', coerce=int,
-    #     choices=choices, validators=[required()]
-    # )
+    analysis = MultiCheckboxField(
+        'Please Choose Your Analyzes: (at least one analysis)', coerce=str,
+        choices=choices )
     email = StringField('Please Enter Your Email:', validators=[DataRequired(), Email()])

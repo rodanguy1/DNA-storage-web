@@ -11,9 +11,9 @@ import random
 
 
 db, app = get_app(__name__)
-# app.config['SECRET_KEY'] = '34533a9999c895e8da8a84fc029b88f8'
-choices = [['1', 'analysis 1'], ['2', 'analysis 2'], ['3', 'analysis 3'],
-           ['4', 'analysis 4'], ['5', 'analysis 5']]
+app.config['SECRET_KEY'] = key
+choices = [['a', 'analysis 1'], ['b', 'analysis 2'], ['c', 'analysis 3'],
+           ['d', 'analysis 4'], ['e', 'analysis 5']]
 
 
 @app.route("/")
@@ -32,10 +32,11 @@ def examples():
     return render_template('examples.html')
 
 
+
 @app.route("/tool")
 def tool():
     form = ToolForm(choices=choices)
-    # form.analysis.choices = choices
+    form.analysis.choices = choices
     return render_template('tool.html', form=form)
 
 
@@ -46,17 +47,21 @@ def after_run():
 
 @app.route("/upload", methods=['GET', 'POST'])
 def upload():
+    debugPrint("in upload")
     form = ToolForm()
     if form.validate_on_submit():
+        debugPrint("if was good")
         form_files= [form.design.data,form.after_align.data,form.after_matching.data,form.reads.data]
         run_id = random.getrandbits(100)
         SaveFilesOnServer(form_files,run_id)
         tool_path = get_tool_path()
         email = form.email
-        # analyzes = form.analysis
-        threading.Thread(target=RunDNATool, args=(tool_path,run_id, email)).start()
-        return redirect(url_for('after_run',email))
+        analyzes = form.analysis.data
+        threading.Thread(target=RunDNATool, args=(tool_path,run_id,str.join(',', analyzes), email.data)).start()
+        return redirect(url_for('after_run'))
     else:
+        for err in  form.errors:
+            debugPrint(err)
         debug_print(form.errors)
         return render_template('tool.html', title='DNA-STORAGE-TOOL', form=form)
 
@@ -91,7 +96,7 @@ def handle_csrf_error(e):
 if __name__ == '__main__':
     # app.run(host='132.69.8.7', port=80 , debug=True)
      try:
-         print "hello"
+         debugPrint('IN MAIN')
          app.run(debug=True)
      except Exception as e:
          print(e.message)

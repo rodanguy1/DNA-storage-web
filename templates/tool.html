@@ -70,28 +70,30 @@
             </div>
 
             <!--# Analyzers-->
-            <!--<div class="form-group">-->
-                <!--{{ form.analysis.label(class="form-check-label", for="analysis") }}-->
-                <!--<br/>-->
-                <!--{% if form.analysis.errors %}-->
-                    <!--{{ form.analysis(class="form-control form-control-lg is-invalid") }}-->
-                    <!--{% for a in form.analysis %}-->
-                    <!--{{ a(class="form-check form-check-is-invalid") }}-->
-                    <!--{% endfor %}-->
-                        <!--{% for a in form.analysis %}-->
-                            <!--{%  for error in a.errors %}-->
-                                <!--<div class="invalid-feedback">-->
-                                     <!--<span>{{ error }}</span>-->
-                                <!--</div>-->
-                            <!--{% endfor %}-->
-                        <!--{% endfor %}-->
-                <!--{% else %}-->
-                    <!--{% for a in form.analysis %}-->
-                        <!--{{ a(class="form-check form-check-inline", checked=1) }}-->
-                        <!--{{ a.label(class="form-check-label form-check-inline" ) }}-->
-                    <!--{% endfor %}-->
-                <!--{% endif %}-->
-            <!--</div>-->
+            <div class="form-group">
+                {{ form.analysis.label(class="form-check-label", for="analysis") }}
+                <br/>
+                {% if form.analysis.errors %}
+                    {{ form.analysis(class="form-control form-control-lg is-invalid") }}
+                    {% for a in form.analysis %}
+                    {{ a(class="form-check form-check-is-invalid") }}
+                    {% endfor %}
+                        {% for a in form.analysis %}
+                            {%  for error in a.errors %}
+                                <div class="invalid-feedback">
+                                     <span>{{ error }}</span>
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                {% else %}
+                    {% for a in form.analysis %}
+                        {{ a(class="form-check form-check-inline", checked=1) }}
+                        {{ a.label(class="form-check-label form-check-inline" ) }}
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <!--# EMAIL-->
             <div class="form-group">
                     {{ form.email.label(class="form-control-label") }}
                     {% if form.email.errors %}
