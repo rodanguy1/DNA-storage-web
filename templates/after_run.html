@@ -3,8 +3,11 @@
 <div class="content-section">
             <div class="panel panel-success">
                  <div class="panel-heading">
+                     {% if email %}
+                      mail was given
+                     {% endif %}
                      <h1>Thanks for using our tool!</h1>
-                     <p>A pdf file named analyzation will arrive to your mail<br>
+                     <p>A pdf file named analyzation will arrive to your mail: {{ email }}<br>
                      This might take a while ( ~20 min )<br>
                      Thanks, see you next time!</p>
                   <!--<p class="text-success"> Thank You for Using Our DNA-STORAGE_TOOL </p>-->
@@ -13,7 +16,7 @@
                   <!--<p class = "text-success"> The results will be sent to your Email within the next 30 minutes </p>-->
 
 
+                </div>
+            </div>
 </div>
-</div>
-    </div>
 {% endblock %}

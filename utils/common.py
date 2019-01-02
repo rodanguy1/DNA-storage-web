@@ -1,4 +1,5 @@
 import datetime
+from utils.config import *
 import os
 import subprocess
 import sys
@@ -6,20 +7,31 @@ from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from os.path import basename
-from utils.config import get_mail, get_dir
+from werkzeug.utils import secure_filename
 
+
+def SaveFilesOnServer(files_list,run_id):
+    if not os.path.isdir(get_dir() + os.sep + input_files_dir):
+        debugPrint('in SaveFilesOnServer: the input path didnt exist')
+        os.mkdir(get_dir() + os.sep + input_files_dir)
+    directory_path = get_dir() + os.sep + input_files_dir + os.sep
+    for fd in files_list:
+        filename= secure_filename(fd.filename)
+        file_path = directory_path+str(run_id)+'_'+ filename
+        fd.save(file_path)
 
 def debug_print(message):
     cur_time = datetime.datetime.now().time()
     print("\n*****DEBUG: " + str(cur_time) + " - " + str(message) + " ****************\n")
 
 
-def run_dna_tool(tool_path, alignment_path, design_path, analyzes ,email):
-    cmd = sys.executable + ' ' + tool_path + ' ' + alignment_path + ' ' + design_path + ' ' + analyzes+ ' ' + email
-    debug_print('b4 process')
+def RunDNATool(tool_path,run_id, analyzes ,email):
+    cmd = sys.executable + ' ' + tool_path + ' ' + run_id
+    debug_print('b4 process. the cmd is '+cmd)
     process_output = subprocess.check_output(cmd)
     debug_print('after process. output is :')
     debug_print(process_output)
+    debug_print(type(process_output))
     if os.path.exists(process_output):
         debug_print('file is existing')
     else:

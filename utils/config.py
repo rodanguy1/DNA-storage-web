@@ -7,22 +7,21 @@ from os.path import basename
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import itertools
-import datetime
+from time import strftime, gmtime
 import subprocess
 import sys
-
-# ############# WORKING DIR #####################################
 from flask_wtf import CsrfProtect
 
+# ############# WORKING DIR #####################################
+input_files_dir = 'input_files_dir'
 sep = os.sep
 # basedir = 'C:' + sep + 'Users' + sep + 'grodan' + sep + 'PycharmProjects' + sep + 'DNA-storage-web'
-basedir = os.getcwd()
 tool_name = 'mock_tool.py'
-tool_path = basedir + sep + 'utils' + sep + tool_name
 # ############# SET EMAIL #####################################
 email = os.environ.get('email')
 password = os.environ.get('email_password')
 mail = None
+
 try:
     gmail = smtplib.SMTP('smtp.gmail.com', 587)
     gmail.ehlo()
@@ -35,12 +34,15 @@ except:
 
 # ############# APP CONFIG #####################################
 
+def debugPrint(msg):
+    current_time = strftime("%H:%M:%S", gmtime())
+    print("********************\n"+current_time+" DEBUG: "+str(msg)+"\n********************")
 
 def get_app(name):
     csrf = CsrfProtect()
     app = Flask(name)
     # todo: make in an env var
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'app.db')
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(get_dir(), 'app.db')
     app.config['SECRET_KEY'] = os.environ.get('secret_key')  # '34533a9999c895e8da8a84fc029b88f8'
     app.config['WTF_CSRF_SECRET_KEY'] = os.environ.get('secret_key')
     app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -63,11 +65,12 @@ def get_id():
 
 
 def get_tool_path():
+    tool_path = get_dir()+'\\utils\\' + tool_name
     return tool_path
 
 
 def get_dir():
-    return basedir
+    return os.getcwd()
 
 
 def get_mail():

@@ -40,10 +40,15 @@ class MultiCheckboxField(SelectMultipleField):
 
 
 class ToolForm(FlaskForm):
-    design = FileField('Enter Your Design CSV File:',
+    design = FileField('Enter your Design CSV file:',
                        validators=[FileRequired(), FileAllowed(['csv'], 'CSV files only')])
-    after_align = FileField('Enter Your After alignment CSV File:',
+    after_align = FileField('Enter your After-Alignment CSV file:',
                             validators=[FileRequired(), FileAllowed(['csv'], 'CSV files only')])
+    after_matching = FileField('Enter your After-Matching CSV file:',
+                            validators=[FileRequired(), FileAllowed(['csv'], 'CSV files only')])
+    reads = FileField('Enter your Reads file:',
+                            validators=[FileRequired(), FileAllowed(['fastq'], 'fastq files only')])
+
     analysis = MultiCheckboxField(
         'Please Choose Your Analyzes: (at least one analysis)', coerce=int,
         choices=choices, validators=[required()]

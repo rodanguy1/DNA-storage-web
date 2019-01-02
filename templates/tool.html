@@ -8,6 +8,8 @@
         <br/>
         <form method="POST" action="/upload" enctype="multipart/form-data">
              {{ form.csrf_token }}
+
+            <!--# Design File-->
             <div class="form-group">
                 {{ form.design.label(class="form-control-label") }}
                 {% if form.design.errors %}
@@ -21,6 +23,8 @@
                 {{ form.design(class="form-control-file") }}
                 {% endif %}
             </div>
+
+            <!--# After Alignment File-->
             <div class="form-group">
                 {{ form.after_align.label(class="form-control-label") }}
                 {% if form.after_align.errors %}
@@ -34,10 +38,46 @@
                 {{ form.after_align(class="form-control-file") }}
                 {% endif %}
             </div>
+
+            <!--# After Matching File-->
+            <div class="form-group">
+                {{ form.after_matching.label(class="form-control-label") }}
+                {% if form.after_matching.errors %}
+                {{ form.after_matching(class="form-control-file form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.after_matching.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.after_matching(class="form-control-file") }}
+                {% endif %}
+            </div>
+
+            <!--# Reads File-->
+            <div class="form-group">
+                {{ form.reads.label(class="form-control-label") }}
+                {% if form.reads.errors %}
+                {{ form.reads(class="form-control-file form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.reads.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.reads(class="form-control-file") }}
+                {% endif %}
+            </div>
+
+            <!--# Analyzers-->
             <div class="form-group">
                 {{ form.analysis.label(class="form-check-label", for="analysis") }}
                 <br/>
                 {% if form.analysis.errors %}
+                there were errors in the analysis
+                {% for error in form.analysis.errors %}
+                    {{ error }}
+                {% endfor %}
                     {{ form.analysis(class="form-control form-control-lg is-invalid") }}
                     {% for a in form.analysis %}
                     {{ a(class="form-check form-check-is-invalid") }}
