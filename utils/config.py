@@ -17,7 +17,7 @@ basedir = os.getcwd()
 config = []
 
 if os.environ.get('mode') == 'prod':
-    basedir='/home/omersabary/DNA-storage-web/'
+    basedir='/home/omersabary/DNA-storage-web'
     with open('/etc/config.json') as config_file:
         config = json.load(config_file)
     email = config.get('email')
