@@ -11,13 +11,13 @@ from flask_wtf import CsrfProtect
 sep = os.sep
 # basedir = 'C:' + sep + 'Users' + sep + 'grodan' + sep + 'PycharmProjects' + sep + 'DNA-storage-web'
 basedir = os.getcwd()
-tool_name = 'mock_tool.py'
-tool_path = basedir + sep + 'utils' + sep + tool_name
+
 # ############# SET EMAIL #####################################
 
 config = []
 
 if os.environ.get('mode') == 'prod':
+    basedir='/home/omersabary/DNA-storage-web/'
     with open('/etc/config.json') as config_file:
         config = json.load(config_file)
     email = config.get('email')
@@ -37,7 +37,8 @@ try:
 except:
     print("Couldn't setup email!!")
 
-
+tool_name = 'mock_tool.py'
+tool_path = basedir + sep + 'utils' + sep + tool_name
 # ############# APP CONFIG #####################################
 
 
@@ -54,6 +55,7 @@ def get_app(name):
     app.config['MAIL_PASSWORD'] = password
     app.config['MAIL_USE_TLS'] = False
     app.config['MAIL_USE_SSL'] = True
+    app.config['PROPAGATE_EXCEPTIONS'] = True
     db = SQLAlchemy(app)
     csrf.init_app(app)
     return db, app

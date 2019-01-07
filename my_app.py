@@ -17,6 +17,7 @@ choices = [['a', 'analysis 1'], ['b', 'analysis 2'], ['c', 'analysis 3'],
 
 @app.route("/")
 def home():
+    debug_print("home page")
     return render_template('home.html')
 
 
@@ -32,6 +33,7 @@ def examples():
 
 @app.route("/tool")
 def tool():
+    debug_print("tool page")
     form = ToolForm(choices=choices)
     form.analysis.choices = choices
     return render_template('tool.html', form=form)
@@ -39,6 +41,7 @@ def tool():
 
 @app.route("/after_run")
 def after_run():
+    debug_print("after_run page")
     return render_template('after_run.html')
 
 
@@ -67,6 +70,7 @@ def upload():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    debug_print("register page")
     form = RegistrationForm()
     if form.validate_on_submit():
         flash('Account created for ' + form.username.data, 'success')
@@ -76,6 +80,7 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    debug_print("login page")
     form = LoginForm()
     if form.validate_on_submit():
         if form.email.data == 'rodanguy@gmail.com' and form.password.data == 'password':
@@ -93,5 +98,4 @@ def handle_csrf_error(e):
 
 
 if __name__ == '__main__':
-    # app.run(host='132.69.8.7', port=80 , debug=True)
     app.run(debug=True)
