@@ -26,12 +26,11 @@ def about():
     return render_template('about.html')
 
 
-@app.route("/examples")
+@app.route("/examples" ,methods=['GET', 'POST'])
 def examples():
     print("DEBUG in exampples")
     debugPrint(os.getcwd())
     return render_template('examples.html')
-
 
 
 @app.route("/tool")
@@ -52,16 +51,16 @@ def upload():
     form = ToolForm()
     if form.validate_on_submit():
         debugPrint("if was good")
-        form_files= [form.design.data,form.after_align.data,form.after_matching.data,form.reads.data]
+        form_files = [form.design.data, form.after_align.data, form.after_matching.data, form.reads.data]
         run_id = random.getrandbits(100)
-        SaveFilesOnServer(form_files,run_id)
+        SaveFilesOnServer(form_files, run_id)
         tool_path = get_tool_path()
         email = form.email
         analyzes = form.analysis.data
-        threading.Thread(target=RunDNATool, args=(tool_path,run_id,str.join(',', analyzes), email.data)).start()
+        threading.Thread(target=RunDNATool, args=(tool_path, run_id, str.join(',', analyzes), email.data)).start()
         return redirect(url_for('after_run'))
     else:
-        for err in  form.errors:
+        for err in form.errors:
             debugPrint(err)
         debug_print(form.errors)
         return render_template('tool.html', title='DNA-STORAGE-TOOL', form=form)
@@ -96,10 +95,8 @@ def handle_csrf_error(e):
 
 if __name__ == '__main__':
     # app.run(host='132.69.8.7', port=80 , debug=True)
-     try:
-         debugPrint('IN MAIN')
-         app.run(debug=True)
-     except Exception as e:
-         print(e.message)
-
-
+    try:
+        debugPrint('IN MAIN')
+        app.run(debug=True)
+    except Exception as e:
+        print(e.message)

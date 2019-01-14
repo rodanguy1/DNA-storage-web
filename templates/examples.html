@@ -2,7 +2,7 @@
 {% block content %}
 <h1>Manual</h1>
 <h3>This is a manual to explain how to run our DNA STORAGE app:</h3>
-<p id="input_files">First, it is mandatory that you have the following files:</p>
+<p id="anchor">First, it is mandatory that you have the following files:</p>
 <ol>
     <li>A CSV file containing the design data</li>
     <li>A CSV file containing the after alignment data</li>
@@ -18,32 +18,62 @@
 <br>
 <h3>Steps for Running:</h3>
 <ol>
-    <a href="#step_1"><li>Go To Tool Page.</li></a>
-    <a href="#step_2"><li>Preparing Your Files and Data.</li></a>
-    <a href="#step_3"><li>Uploading Data.</li></a>
+    <a href="#step-1"><li>Go To Tool Page.</li></a>
+    <a href="#step-2"><li>Preparing Your Files and Data.</li></a>
+    <a href="#step-3"><li>Uploading Data.</li></a>
+    <a href="#step-4"><li>After Run.</li></a>
 </ol>
 
-
+<p id="step-1"></p>
 <br>
 <br>
 <br>
-<h2 id="step_1">Go To Tool Page:</h2>
+<h2>Go To Tool Page:</h2>
 <p>Not much to add about this. Just go to the "Tool" page when your done reading this manual.
-    <img src="./Tool_Bar_Circled.PNG" alt='couldnt find'>
+    <br><br><br>
+    <img src="/static/Tool_Bar_Circled.PNG" alt='couldnt find' height="50" border="100">
 </p>
-<h2 id="step_2">Preparing Your Files and Data:</h2>
-<p>You must have the <a href="#input_files">input files</a> ready. Make sure your files are of the correct format.
+<p id="step-2"></p>
+<br>
+<br>
+<br>
+<h2>Preparing Your Files and Data:</h2>
+<p>You must have the <a href="#anchor">input files</a> ready. Make sure your files are of the correct format.
     An input file that is meant to be CSV cannot be saved as any other format.
-    <br>An email must be provided in order for the output file to be sent to you. Please make sure you enter a
+    <h6>design file example:</h6>
+    <img src="/static/design_example.PNG" alt='couldnt find'>
+    <br><br><h6>after alignment file example:</h6>
+    <img src="/static/alignment_example.PNG" alt='couldnt find' >
+    <br><br><h6>after matching file example:</h6>
+    <img src="/static/matching_example.PNG" alt='couldnt find' >
+    <br><br><h6>reads file example:</h6>
+    <img src="/static/reads_example.PNG" alt='couldnt find'  border="100">
+    <br><br>REMEMBER: an email must also be provided in order for the output file to be sent to you. Please make sure you enter a
     valid email address.
 </p>
-
-<h2 id="step_3">Uploading Data:</h2>
-<p>Upload all files to the correct location on the page.<img alt='couldnt find' src="./Uploading_files_BAD_and_GOOD.PNG">Since the files are large, this might take some time.
-    <br>Once all input has been uploaded, press the "Run Tool" button!<img src='mail_and_run_botton.PNG' alt='couldnt find'>
-    You should be redirected to the correct post-run page.<img alt='couldnt find' src="after_run.PNG">
+<p id="step-3"></p>
+<br>
+<br>
+<br>
+<h2>Uploading Data:</h2>
+<p>Upload all files to the correct location on the page. The text next to each "Choose File" box should change to the name of
+    your file if file is of the right format
+    <br><br><img alt='upload files' src="/static/Uploading_files_BAD_and_GOOD.PNG">
+    <h6>NOTE: Since the files are large, this might take some time.</h6>
+    <br>Once all input has been uploaded, press the "Run Tool" button!
+    <br><img src='/static/mail_and_run_botton.PNG' alt='mail button'>
+    <br><br>You should be redirected to the correct post-run page.
     <br>If not, please make sure you followed all steps correctly.
+    <h6>Remember: This might take some time (can be up to 20 min).</h6>
+    <br><br><img src="/static/after_run.PNG" alt='after run'>
 </p>
-
+<p id="step-4"></p>
+<br>
+<br>
+<br>
+<h2>After Run:</h2>
+<p>An email containing a pdf of your DNA storage analyzation will be sent to the mail given as input.
+<br>GOOD LUCK!</p>
+<br><br><br><br>
 
 {% endblock %}
