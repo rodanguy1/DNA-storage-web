@@ -47,16 +47,19 @@ def after_run():
 
 @app.route("/upload", methods=['GET', 'POST'])
 def upload():
+    flash('The upload of the files may take a few minutes', 'success')
     form = ToolForm()
     if form.validate_on_submit():
         design_file = form.design.data
         file_name = secure_filename(design_file.filename)
         design_path = get_dir() + os.sep + 'outputs' + os.sep + file_name
         design_file.save(design_path)
+        os.chmod(design_path, 755)
         after_align_file = form.after_align.data
         file_name = secure_filename(after_align_file.filename)
         after_align_path = get_dir() + os.sep + 'outputs' + os.sep + file_name
         after_align_file.save(after_align_path)
+        os.chmod(after_align_path, 755)
         tool_path = get_tool_path()
         email = form.email
         analyzes = form.analysis.data

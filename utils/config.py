@@ -79,3 +79,4 @@ def get_dir():
 
 def get_mail():
     return mail
+

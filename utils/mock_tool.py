@@ -13,8 +13,8 @@ def run_tool(user_design_file, analyzes, user_email):
     dest = get_dir() + os.sep + 'Output.pdf'
     pdf_file = canvas.Canvas(dest)
     pdf_file.drawString(0, 0, "hello whats up?")
-    os.chmod(design, 755)
-    with open(user_design_file, 'r') as csv_file_obj:
+    os.chmod(user_design_file, 755)
+    with open(user_design_file, 'r+') as csv_file_obj:
         reader = csv.reader(csv_file_obj)
         x = 25
         y = 25
