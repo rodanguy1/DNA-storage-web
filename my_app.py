@@ -49,10 +49,10 @@ def after_run():
 
 @app.route("/upload", methods=['GET', 'POST'])
 def upload():
-    debugPrint("in upload")
+    debug_print("in upload")
     form = ToolForm()
     if form.validate_on_submit():
-        debugPrint("if was good")
+        debug_print("if was good")
         form_files= [form.design.data,form.after_align.data,form.after_matching.data,form.reads.data]
         run_id = random.getrandbits(100)
         SaveFilesOnServer(form_files,run_id)
@@ -63,7 +63,7 @@ def upload():
         return redirect(url_for('after_run'))
     else:
         for err in  form.errors:
-            debugPrint(err)
+            debug_print(err)
         debug_print(form.errors)
         return render_template('tool.html', title='DNA-STORAGE-TOOL', form=form)
 
@@ -100,7 +100,7 @@ def handle_csrf_error(e):
 if __name__ == '__main__':
     # app.run(host='132.69.8.7', port=80 , debug=True)
      try:
-         debugPrint('IN MAIN')
+         debug_print('IN MAIN')
          app.run(debug=True)
      except Exception as e:
          print(e.message)
