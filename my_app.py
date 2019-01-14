@@ -29,6 +29,7 @@ def about():
 @app.route("/examples")
 def examples():
     print("DEBUG in exampples")
+    debugPrint(os.getcwd())
     return render_template('examples.html')
 
 

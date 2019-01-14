@@ -15,7 +15,10 @@ from flask_wtf import CsrfProtect
 input_files_dir = 'input_files_dir'
 sep = os.sep
 # basedir = 'C:' + sep + 'Users' + sep + 'grodan' + sep + 'PycharmProjects' + sep + 'DNA-storage-web'
-tool_name = 'mock_tool.py'
+
+# tool_name = 'mock_tool.py'
+tool_name= 'main.py'
+tool_sub_path = '\eitans_files\Library-Analyzer-master\\'
 # ############# SET EMAIL #####################################
 
 config = []
@@ -75,7 +78,7 @@ def get_id():
 
 
 def get_tool_path():
-    tool_path = get_dir()+'\\utils\\' + tool_name
+    tool_path = get_dir()+tool_sub_path + tool_name
     return tool_path
 
 
