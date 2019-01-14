@@ -1,4 +1,49 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>examples</h1>
+<h1>Manual</h1>
+<h3>This is a manual to explain how to run our DNA STORAGE app:</h3>
+<p id="input_files">First, it is mandatory that you have the following files:</p>
+<ol>
+    <li>A CSV file containing the design data</li>
+    <li>A CSV file containing the after alignment data</li>
+    <li>A CSV file containing the after matching data</li>
+    <li>A fastq file containing the reads data</li>
+</ol>
+<h6>IMPORTANT:</h6>
+    <p>You must realize that the correctness of your files is your own responsibility!
+        <br>Our app will not be able to run efficiently and correctly if there are bugs in the format of your files.
+        <br>Please remember to double check them before you run the tool.
+    </p>
+<br>
+<br>
+<h3>Steps for Running:</h3>
+<ol>
+    <a href="#step_1"><li>Go To Tool Page.</li></a>
+    <a href="#step_2"><li>Preparing Your Files and Data.</li></a>
+    <a href="#step_3"><li>Uploading Data.</li></a>
+</ol>
+
+
+<br>
+<br>
+<br>
+<h2 id="step_1">Go To Tool Page:</h2>
+<p>Not much to add about this. Just go to the "Tool" page when your done reading this manual.
+    <img src="./Tool_Bar_Circled.PNG" alt='couldnt find'>
+</p>
+<h2 id="step_2">Preparing Your Files and Data:</h2>
+<p>You must have the <a href="#input_files">input files</a> ready. Make sure your files are of the correct format.
+    An input file that is meant to be CSV cannot be saved as any other format.
+    <br>An email must be provided in order for the output file to be sent to you. Please make sure you enter a
+    valid email address.
+</p>
+
+<h2 id="step_3">Uploading Data:</h2>
+<p>Upload all files to the correct location on the page.<img alt='couldnt find' src="./Uploading_files_BAD_and_GOOD.PNG">Since the files are large, this might take some time.
+    <br>Once all input has been uploaded, press the "Run Tool" button!<img src='mail_and_run_botton.PNG' alt='couldnt find'>
+    You should be redirected to the correct post-run page.<img alt='couldnt find' src="after_run.PNG">
+    <br>If not, please make sure you followed all steps correctly.
+</p>
+
+
 {% endblock %}

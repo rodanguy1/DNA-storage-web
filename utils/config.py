@@ -5,13 +5,20 @@ import smtplib
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-# ############# WORKING DIR #####################################
+import itertools
+import datetime
+import subprocess
+import sys
 from flask_wtf import CsrfProtect
-
+# ############# WORKING DIR #####################################
+input_files_dir = 'input_files_dir'
+tool_name= 'main.py'
 sep = os.sep
 # basedir = 'C:' + sep + 'Users' + sep + 'grodan' + sep + 'PycharmProjects' + sep + 'DNA-storage-web'
 basedir = os.getcwd()
-
+tool_name= 'main.py'
+tool_path = basedir + sep + 'utils' + sep + tool_name
+tool_sub_path = '\eitans_files\Library-Analyzer-master\\'
 # ############# SET EMAIL #####################################
 
 config = []
@@ -37,8 +44,6 @@ try:
 except:
     print("Couldn't setup email!!")
 
-tool_name = 'mock_tool.py'
-tool_path = basedir + sep + 'utils' + sep + tool_name
 # ############# APP CONFIG #####################################
 
 
@@ -70,6 +75,7 @@ def get_id():
 
 
 def get_tool_path():
+    tool_path = get_dir()+tool_sub_path + tool_name
     return tool_path
 
 
@@ -79,4 +85,3 @@ def get_dir():
 
 def get_mail():
     return mail
-

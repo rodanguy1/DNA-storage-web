@@ -2,9 +2,10 @@ import threading
 from flask import render_template, url_for, flash, redirect
 from flask_wtf.csrf import CSRFError
 from werkzeug.utils import secure_filename
-from utils.common import debug_print, run_dna_tool
+from utils.common import *
 from utils.config import *
 from utils.forms import RegistrationForm, LoginForm, ToolForm
+import random
 
 # todo: create database API and implement it in register/login.html
 
@@ -28,6 +29,7 @@ def about():
 
 @app.route("/examples")
 def examples():
+    print("DEBUG in exampples")
     return render_template('examples.html')
 
 
@@ -47,26 +49,21 @@ def after_run():
 
 @app.route("/upload", methods=['GET', 'POST'])
 def upload():
-    flash('The upload of the files may take a few minutes', 'success')
+    debugPrint("in upload")
     form = ToolForm()
     if form.validate_on_submit():
-        design_file = form.design.data
-        file_name = secure_filename(design_file.filename)
-        design_path = get_dir() + os.sep + 'outputs' + os.sep + file_name
-        design_file.save(design_path)
-        os.chmod(design_path, 755)
-        after_align_file = form.after_align.data
-        file_name = secure_filename(after_align_file.filename)
-        after_align_path = get_dir() + os.sep + 'outputs' + os.sep + file_name
-        after_align_file.save(after_align_path)
-        os.chmod(after_align_path, 755)
+        debugPrint("if was good")
+        form_files= [form.design.data,form.after_align.data,form.after_matching.data,form.reads.data]
+        run_id = random.getrandbits(100)
+        SaveFilesOnServer(form_files,run_id)
         tool_path = get_tool_path()
         email = form.email
         analyzes = form.analysis.data
-        threading.Thread(target=run_dna_tool,
-                         args=(tool_path, after_align_path, design_path, str.join(',', analyzes), email.data)).start()
+        threading.Thread(target=RunDNATool, args=(tool_path,run_id,str.join(',', analyzes), email.data)).start()
         return redirect(url_for('after_run'))
     else:
+        for err in  form.errors:
+            debugPrint(err)
         debug_print(form.errors)
         return render_template('tool.html', title='DNA-STORAGE-TOOL', form=form)
 
@@ -101,4 +98,11 @@ def handle_csrf_error(e):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # app.run(host='132.69.8.7', port=80 , debug=True)
+     try:
+         debugPrint('IN MAIN')
+         app.run(debug=True)
+     except Exception as e:
+         print(e.message)
+
+

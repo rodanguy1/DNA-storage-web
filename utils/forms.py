@@ -7,7 +7,6 @@ from wtforms.widgets import CheckboxInput, ListWidget
 choices = [['a', 'analysis 1'], ['b', 'analysis 2'], ['c', 'analysis 3'],
            ['d', 'analysis 4'], ['e', 'analysis 5']]
 
-
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -40,12 +39,16 @@ class MultiCheckboxField(SelectMultipleField):
 
 
 class ToolForm(FlaskForm):
-    design = FileField('Enter Your Design CSV File:',
+    design = FileField('Enter your Design CSV file:',
                        validators=[FileRequired(), FileAllowed(['csv'], 'CSV files only')])
-    after_align = FileField('Enter Your After alignment CSV File:',
+    after_align = FileField('Enter your After-Alignment CSV file:',
                             validators=[FileRequired(), FileAllowed(['csv'], 'CSV files only')])
+    after_matching = FileField('Enter your After-Matching CSV file:',
+                            validators=[FileRequired(), FileAllowed(['csv'], 'CSV files only')])
+    reads = FileField('Enter your Reads file:',
+                            validators=[FileRequired(), FileAllowed(['fastq'], 'fastq files only')])
+
     analysis = MultiCheckboxField(
-        'Please Choose Your Analyzes: (at least one analysis)',
-        choices=choices, validators=[required()]
-    )
+        'Please Choose Your Analyzes: (at least one analysis)', coerce=str,
+        choices=choices , validators=[required()])
     email = StringField('Please Enter Your Email:', validators=[DataRequired(), Email()])
