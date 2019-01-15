@@ -50,5 +50,5 @@ class ToolForm(FlaskForm):
 
     analysis = MultiCheckboxField(
         'Please Choose Your Analyzes: (at least one analysis)', coerce=str,
-        choices=choices )
+        choices=choices , validators=[required()])
     email = StringField('Please Enter Your Email:', validators=[DataRequired(), Email()])

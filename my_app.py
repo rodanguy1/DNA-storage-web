@@ -18,6 +18,7 @@ choices = [['a', 'analysis 1'], ['b', 'analysis 2'], ['c', 'analysis 3'],
 
 @app.route("/")
 def home():
+    debug_print("home page")
     return render_template('home.html')
 
 
@@ -26,15 +27,15 @@ def about():
     return render_template('about.html')
 
 
-@app.route("/examples" ,methods=['GET', 'POST'])
+@app.route("/examples")
 def examples():
     print("DEBUG in exampples")
-    debugPrint(os.getcwd())
     return render_template('examples.html')
 
 
 @app.route("/tool")
 def tool():
+    debug_print("tool page")
     form = ToolForm(choices=choices)
     form.analysis.choices = choices
     return render_template('tool.html', form=form)
@@ -42,32 +43,34 @@ def tool():
 
 @app.route("/after_run")
 def after_run():
+    debug_print("after_run page")
     return render_template('after_run.html')
 
 
 @app.route("/upload", methods=['GET', 'POST'])
 def upload():
-    debugPrint("in upload")
+    debug_print("in upload")
     form = ToolForm()
     if form.validate_on_submit():
-        debugPrint("if was good")
-        form_files = [form.design.data, form.after_align.data, form.after_matching.data, form.reads.data]
+        debug_print("if was good")
+        form_files= [form.design.data,form.after_align.data,form.after_matching.data,form.reads.data]
         run_id = random.getrandbits(100)
-        SaveFilesOnServer(form_files, run_id)
+        SaveFilesOnServer(form_files,run_id)
         tool_path = get_tool_path()
         email = form.email
         analyzes = form.analysis.data
-        threading.Thread(target=RunDNATool, args=(tool_path, run_id, str.join(',', analyzes), email.data)).start()
+        threading.Thread(target=RunDNATool, args=(tool_path,run_id,str.join(',', analyzes), email.data)).start()
         return redirect(url_for('after_run'))
     else:
-        for err in form.errors:
-            debugPrint(err)
+        for err in  form.errors:
+            debug_print(err)
         debug_print(form.errors)
         return render_template('tool.html', title='DNA-STORAGE-TOOL', form=form)
 
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    debug_print("register page")
     form = RegistrationForm()
     if form.validate_on_submit():
         flash('Account created for ' + form.username.data, 'success')
@@ -77,6 +80,7 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    debug_print("login page")
     form = LoginForm()
     if form.validate_on_submit():
         if form.email.data == 'rodanguy@gmail.com' and form.password.data == 'password':
@@ -95,8 +99,10 @@ def handle_csrf_error(e):
 
 if __name__ == '__main__':
     # app.run(host='132.69.8.7', port=80 , debug=True)
-    try:
-        debugPrint('IN MAIN')
-        app.run(debug=True)
-    except Exception as e:
-        print(e.message)
+     try:
+         debug_print('IN MAIN')
+         app.run(debug=True)
+     except Exception as e:
+         print(e.message)
+
+

@@ -4,16 +4,14 @@ from progress.bar import Bar
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
-#import edlib
+# import edlib
 import re
-
 from src.analyzers.analyzer import Analyzer
 from src.utils.content import Content
 from src.utils.biology import DELETION, INSERTION, MISMATCH
 
 
-class DeletionAnalyzer (Analyzer):
-
+class DeletionAnalyzer(Analyzer):
     # Will store the number of deletions for each base.
     base_deletion = {}
 
@@ -23,10 +21,10 @@ class DeletionAnalyzer (Analyzer):
     def __init__(self):
         super(DeletionAnalyzer, self).__init__()
         self.base_deletion = {
-            'A' : 0,
-            'G' : 0,
-            'C' : 0,
-            'T' : 0
+            'A': 0,
+            'G': 0,
+            'C': 0,
+            'T': 0
         }
 
     def analyze(self, library_reads, library_design):

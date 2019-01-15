@@ -6,35 +6,35 @@ import smtplib
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import itertools
-from time import strftime, gmtime
+import datetime
 import subprocess
 import sys
 from flask_wtf import CsrfProtect
-
 # ############# WORKING DIR #####################################
 input_files_dir = 'input_files_dir'
+tool_name= 'main.py'
 sep = os.sep
 # basedir = 'C:' + sep + 'Users' + sep + 'grodan' + sep + 'PycharmProjects' + sep + 'DNA-storage-web'
-
-# tool_name = 'mock_tool.py'
+basedir = os.getcwd()
 tool_name= 'main.py'
+tool_path = basedir + sep + 'utils' + sep + tool_name
 tool_sub_path = '\eitans_files\Library-Analyzer-master\\'
 # ############# SET EMAIL #####################################
 
 config = []
 
 if os.environ.get('mode') == 'prod':
+    basedir='/home/omersabary/DNA-storage-web'
     with open('/etc/config.json') as config_file:
-        config = json.load('config_file')
-    email= config.get('email')
+        config = json.load(config_file)
+    email = config.get('email')
     password = config.get('email_password')
     key = config.get('secret_key')
 else:
     email = os.environ.get('email')
     password = os.environ.get('email_password')
     key = os.environ.get('secret_key')
-    mail = None
-
+mail = None
 try:
     gmail = smtplib.SMTP('smtp.gmail.com', 587)
     gmail.ehlo()
@@ -44,18 +44,14 @@ try:
 except:
     print("Couldn't setup email!!")
 
-
 # ############# APP CONFIG #####################################
 
-def debugPrint(msg):
-    current_time = strftime("%H:%M:%S", gmtime())
-    print("********************\n"+current_time+" DEBUG: "+str(msg)+"\n********************")
 
 def get_app(name):
     csrf = CsrfProtect()
     app = Flask(name)
     # todo: make in an env var
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(get_dir(), 'app.db')
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'app.db')
     app.config['SECRET_KEY'] = key
     app.config['WTF_CSRF_SECRET_KEY'] = key
     app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -64,6 +60,7 @@ def get_app(name):
     app.config['MAIL_PASSWORD'] = password
     app.config['MAIL_USE_TLS'] = False
     app.config['MAIL_USE_SSL'] = True
+    app.config['PROPAGATE_EXCEPTIONS'] = True
     db = SQLAlchemy(app)
     csrf.init_app(app)
     return db, app
@@ -83,7 +80,7 @@ def get_tool_path():
 
 
 def get_dir():
-    return os.getcwd()
+    return basedir
 
 
 def get_mail():
