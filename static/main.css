@@ -8,6 +8,7 @@ h1, h2, h3, h4, h5, h6 {
   color: #444444;
 }
 
+
 .bg-steel {
   background-color: #5f788a;
 }
@@ -34,6 +35,13 @@ h1, h2, h3, h4, h5, h6 {
 
 .article-title {
   color: #444444;
+}
+
+.anchor{
+  display: block;
+  height: 115px; /*same height as header*/
+  margin-top: -115px; /*same height as header*/
+  visibility: hidden;
 }
 
 a.article-title:hover {

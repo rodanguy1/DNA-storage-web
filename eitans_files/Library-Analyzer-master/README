@@ -1,0 +1,24 @@
+########################################################################################
+                      What do you need in order to use the QC tool
+########################################################################################
+
+1. A fastq file containing the sequenced reads from the synthetic library.
+
+2. A design file in a csv format containing the following:
+    a. A column named 'sequence' with all the design sequences.
+    2. A column named 'barcode' with all the sequences barcode.
+
+3. A configuration file with the following setup (look under 'config.txt' for an example):
+    a. sequencePrefix
+    b. sequenceSuffix
+    c. barcodePosition
+
+########################################################################################
+                      Running the QC tool with arguments
+########################################################################################
+
+You can run the tool in the following way:
+python main.py arg1 arg2 arg3
+arg1 = the path to the design file.
+arg2 = the path to a txt file containing the names of all reads files.
+arg3 = the path to the config file.
