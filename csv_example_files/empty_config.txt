@@ -1,7 +1,0 @@
-{
-    "prefix" : "",
-    "suffix" : "",
-    "barcode_start" : 0,
-    "barcode_end" : 0,
-    "length" : 0
-}
