@@ -61,14 +61,14 @@ def DeleteSavedFiles(run_id):
 
 def RunDNATool(tool_path, run_id, analyzers, email):
     cmd = [sys.executable, tool_path, str(run_id)]
-    # debug_print('b4 process. the cmd is ' + cmd)
+    debug_print(cmd)
     start_time = strftime("%H:%M:%S", gmtime())
     try:
         process_output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
         path_to_output = get_dir() + os.sep + str(run_id) + '_report.pdf'
         if os.path.exists(path_to_output):
-            debug_print('file is existing.\n\tNOW EMAIL CODE')
-            # send_good_results(email,start_time,path_to_output)
+            debug_print('\nreport.pdf file is existing.\n\tNOW EMAIL CODE')
+            send_good_results(email,start_time,path_to_output)
             # send_mail_aux(email,start_time,path_to_output)
         else:
             debug_print('file is None')
@@ -124,7 +124,8 @@ def add_header(message, header_name, header_value):
     return message
 
 
-def send_good_results(email, time):
+def send_good_results(email, time,path_to_output):
+    debug_print('in send_good_results')
     msg = MIMEMultipart()
     subject = 'DNA-STORAGE-TOOL results'
     msg = add_header(msg, 'Subject', subject)
@@ -137,20 +138,19 @@ def send_good_results(email, time):
         msg['From'] = email
     else:
         msg['From'] = os.environ.get('email')
-    file = get_dir() + os.sep + 'Output.pdf'
     plain = ' your DNA-STORAGE-TOOL results of run that started on: 0 are now available to Download'
     if (contains_non_ascii_characters(plain)):
         plain_text = MIMEText(plain.encode('utf-8'), 'plain', 'utf-8')
     else:
         plain_text = MIMEText(plain, 'plain')
     msg.attach(plain_text)
-    with open(file, "rb") as fil:
+    with open(path_to_output, "rb") as fil:
         part = MIMEApplication(
             fil.read(),
-            Name=basename(file)
+            Name=basename(path_to_output)
         )
     # After the file is closed
-    part['Content-Disposition'] = 'attachment; filename="%s"' % basename(file)
+    part['Content-Disposition'] = 'attachment; filename="%s"' % basename(path_to_output)
     msg.attach(part)
     # try:
     get_mail().send_message(msg)

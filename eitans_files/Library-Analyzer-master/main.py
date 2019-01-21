@@ -198,11 +198,6 @@ if __name__ == "__main__":
         lr_obj, ld_obj = get_library_reads_and_design_simple(design_file, reads_file, config_file)
 
     if not lr_obj.did_matching() or OVERRIDE:
-        print('IN BAD CONDITION')
-        if OVERRIDE:
-            print("THERE WAS OVERRRIDE")
-        if not lr_obj.did_matching():
-            print("THERE WAS THE FIRST")
         preprocess_reads(lr_obj)
         match_reads_to_design(lr_obj, ld_obj)
 
