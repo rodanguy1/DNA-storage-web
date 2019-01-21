@@ -12,11 +12,8 @@ from time import *
 
 
 def prepare_dict(files_list):
-    files_dict = {}
-    files_dict['design.csv'] = files_list[0]
-    files_dict['after_alignment.csv'] = files_list[1]
-    files_dict['after_matching.csv'] = files_list[2]
-    files_dict['reads.fastq'] = files_list[3]
+    files_dict = {'design.csv': files_list[0], 'after_alignment.csv': files_list[1],
+                  'after_matching.csv': files_list[2], 'reads.fastq': files_list[3]}
     return files_dict
 
 
@@ -37,14 +34,14 @@ def debug_print(message):
     print("\n*****DEBUG: " + str(current_time) + " - " + str(message) + " ****************\n")
 
 
-def timeDiff(time1, time2):
+def time_diff(time1, time2):
     timeA = datetime.datetime.strptime(time1, "%H:%M:%S")
     timeB = datetime.datetime.strptime(time2, "%H:%M:%S")
     newTime = timeA - timeB
     return newTime
 
 
-def DeleteSavedFiles(run_id):
+def delete_saved_files(run_id):
     path_to_files = get_dir() + os.sep + input_files_dir + os.sep
     debug_print('in DeleteSavedFiles\nthe path to files is ' + str(path_to_files))
     file_suffixes = ['_design.csv', '_after_alignment.csv', '_after_matching.csv', '_reads.fastq']
@@ -55,7 +52,7 @@ def DeleteSavedFiles(run_id):
             debug_print('the file ' + str(path_to_files) + str(run_id) + str(suffix) + 'didnt exist')
 
 
-def RunDNATool(tool_path, run_id, analyzers, email):
+def run_dna_tool(tool_path, run_id, analyzers, email):
     cmd = [sys.executable, tool_path, str(run_id)]
     # debug_print(cmd)
     start_time = strftime("%H:%M:%S", gmtime())
@@ -86,7 +83,7 @@ def RunDNATool(tool_path, run_id, analyzers, email):
         # send_bad_results(email, start_time,run_time,traceback_str)
     finally:
         debug_print("in Finally statement")
-        DeleteSavedFiles(run_id)
+        delete_saved_files(run_id)
 
 
 def send_bad_results(email, start_time, run_time, traceback_str):
