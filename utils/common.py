@@ -7,14 +7,16 @@ from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from os.path import basename
-from time import *
-
 from utils.config import *
+from time import *
 
 
 def prepare_dict(files_list):
-    files_dict = {'design.csv': files_list[0], 'after_alignment.csv': files_list[1],
-                  'after_matching.csv': files_list[2], 'reads.fastq': files_list[3]}
+    files_dict = {}
+    files_dict['design.csv'] = files_list[0]
+    files_dict['after_alignment.csv'] = files_list[1]
+    files_dict['after_matching.csv'] = files_list[2]
+    files_dict['reads.fastq'] = files_list[3]
     return files_dict
 
 
@@ -35,14 +37,14 @@ def debug_print(message):
     print("\n*****DEBUG: " + str(current_time) + " - " + str(message) + " ****************\n")
 
 
-def time_diff(time1, time2):
+def timeDiff(time1, time2):
     timeA = datetime.datetime.strptime(time1, "%H:%M:%S")
     timeB = datetime.datetime.strptime(time2, "%H:%M:%S")
     newTime = timeA - timeB
     return newTime
 
 
-def delete_saved_files(run_id):
+def DeleteSavedFiles(run_id):
     path_to_files = get_dir() + os.sep + input_files_dir + os.sep
     debug_print('in DeleteSavedFiles\nthe path to files is ' + str(path_to_files))
     file_suffixes = ['_design.csv', '_after_alignment.csv', '_after_matching.csv', '_reads.fastq']
@@ -53,16 +55,16 @@ def delete_saved_files(run_id):
             debug_print('the file ' + str(path_to_files) + str(run_id) + str(suffix) + 'didnt exist')
 
 
-def run_dna_tool(dna_tool_path, run_id, analyzers, email):
-    cmd = [sys.executable, dna_tool_path, str(run_id)]
-    # debug_print('b4 process. the cmd is ' + cmd)
+def RunDNATool(tool_path, run_id, analyzers, email):
+    cmd = [sys.executable, tool_path, str(run_id)]
+    # debug_print(cmd)
     start_time = strftime("%H:%M:%S", gmtime())
     try:
         process_output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
         path_to_output = get_dir() + os.sep + str(run_id) + '_report.pdf'
         if os.path.exists(path_to_output):
-            debug_print('file is existing.\n\tNOW EMAIL CODE')
-            send_good_results(email, start_time, path_to_output)
+            debug_print('\nreport.pdf file is existing.\n\tNOW EMAIL CODE')
+            send_good_results(email,start_time,path_to_output)
             # send_mail_aux(email,start_time,path_to_output)
         else:
             debug_print('file is None')
@@ -79,12 +81,12 @@ def run_dna_tool(dna_tool_path, run_id, analyzers, email):
             # run_time = timeDiff(end_time, start_time)
             # time.sleep(7)
             debug_print('THE TRACEBACK\n')
-            for line in traceback_str.decode('utf-8').split('\n'):
+            for line in traceback_str.split('\n'):
                 print(line)
         # send_bad_results(email, start_time,run_time,traceback_str)
     finally:
         debug_print("in Finally statement")
-        delete_saved_files(run_id)
+        DeleteSavedFiles(run_id)
 
 
 def send_bad_results(email, start_time, run_time, traceback_str):
@@ -121,7 +123,8 @@ def add_header(message, header_name, header_value):
     return message
 
 
-def send_good_results(email, time):
+def send_good_results(email, time,path_to_output):
+    debug_print('in send_good_results')
     msg = MIMEMultipart()
     subject = 'DNA-STORAGE-TOOL results'
     msg = add_header(msg, 'Subject', subject)
@@ -134,20 +137,19 @@ def send_good_results(email, time):
         msg['From'] = email
     else:
         msg['From'] = os.environ.get('email')
-    file = get_dir() + os.sep + 'Output.pdf'
     plain = ' your DNA-STORAGE-TOOL results of run that started on: 0 are now available to Download'
     if contains_non_ascii_characters(plain):
         plain_text = MIMEText(plain.encode('utf-8'), 'plain', 'utf-8')
     else:
         plain_text = MIMEText(plain, 'plain')
     msg.attach(plain_text)
-    with open(file, "rb") as fil:
+    with open(path_to_output, "rb") as fil:
         part = MIMEApplication(
             fil.read(),
-            Name=basename(file)
+            Name=basename(path_to_output)
         )
     # After the file is closed
-    part['Content-Disposition'] = 'attachment; filename="%s"' % basename(file)
+    part['Content-Disposition'] = 'attachment; filename="%s"' % basename(path_to_output)
     msg.attach(part)
     # try:
     get_mail().send_message(msg)
