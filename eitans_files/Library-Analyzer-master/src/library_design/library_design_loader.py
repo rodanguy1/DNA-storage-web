@@ -15,5 +15,5 @@ def load_oligo_design(file):
     :param file: The file name from which to build the dataframe.
     :return: A Dataframe containing the data in the file.
     """
-    oligo_df = pd.read_csv(file)
+    oligo_df = pd.read_csv("{}".format(file))
     return oligo_df

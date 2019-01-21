@@ -1,11 +1,11 @@
+import random
 import threading
-from flask import render_template, url_for, flash, redirect
+from flask import render_template, url_for, flash, redirect, request
 from flask_wtf.csrf import CSRFError
-from werkzeug.utils import secure_filename
+
 from utils.common import *
 from utils.config import *
 from utils.forms import RegistrationForm, LoginForm, ToolForm
-import random
 
 # todo: create database API and implement it in register/login.html
 
@@ -14,6 +14,12 @@ db, app = get_app(__name__)
 app.config['SECRET_KEY'] = key
 choices = [['a', 'analysis 1'], ['b', 'analysis 2'], ['c', 'analysis 3'],
            ['d', 'analysis 4'], ['e', 'analysis 5']]
+
+
+
+@app.errorhandler(413)
+def request_entity_too_large(error):
+    return 'File Too Large', 413
 
 
 @app.route("/")
@@ -49,23 +55,26 @@ def after_run():
 
 @app.route("/upload", methods=['GET', 'POST'])
 def upload():
-    debug_print("in upload")
-    form = ToolForm()
-    if form.validate_on_submit():
-        debug_print("if was good")
-        form_files= [form.design.data,form.after_align.data,form.after_matching.data,form.reads.data]
-        run_id = random.getrandbits(100)
-        SaveFilesOnServer(form_files,run_id)
-        tool_path = get_tool_path()
-        email = form.email
-        analyzes = form.analysis.data
-        threading.Thread(target=RunDNATool, args=(tool_path,run_id,str.join(',', analyzes), email.data)).start()
-        return redirect(url_for('after_run'))
-    else:
-        for err in  form.errors:
-            debug_print(err)
-        debug_print(form.errors)
-        return render_template('tool.html', title='DNA-STORAGE-TOOL', form=form)
+    if request.method == 'POST':
+        debug_print("in upload")
+        form = ToolForm()
+        if form.validate_on_submit():
+            debug_print("if was good")
+            form_files = [form.design.data, form.after_align.data, form.after_matching.data, form.reads.data]
+            run_id = random.getrandbits(100)
+            save_files_on_server(form_files, run_id)
+            dna_tool_path = get_tool_path()
+            email1 = form.email
+            analyzes = form.analysis.data
+            threading.Thread(target=run_dna_tool,
+                             args=(dna_tool_path, run_id, str.join(',', analyzes), email1.data)).start()
+            return redirect(url_for('after_run'))
+        else:
+            debug_print("The Form didnt pass validation on submit")
+            for err in form.errors:
+                debug_print(err)
+            debug_print(form.errors)
+            return render_template('tool.html', title='DNA-STORAGE-TOOL', form=form)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -98,11 +107,8 @@ def handle_csrf_error(e):
 
 
 if __name__ == '__main__':
-    # app.run(host='132.69.8.7', port=80 , debug=True)
-     try:
-         debug_print('IN MAIN')
-         app.run(debug=True)
-     except Exception as e:
-         print(e.message)
-
-
+    try:
+        debug_print('IN MAIN')
+        app.run(debug=True)
+    except Exception as e:
+        print(e.message)

@@ -5,7 +5,7 @@ import os
 
 from src.aligners.barcode_aligner import BarcodeAligner
 from src.aligners.library_matcher import OligoMatcher
-#from src.analyzers.deletion_analyzer import DeletionAnalyzer
+# from src.analyzers.deletion_analyzer import DeletionAnalyzer
 from src.analyzers.deletion_position_per_base_analyzer import DeletionPositionPerBaseAnalyzer
 from src.analyzers.general_analyzer import GeneralAnalyzer
 from src.analyzers.reads_length_analyzer import ReadLengthAnalyzer
@@ -16,7 +16,7 @@ from src.library_reads import library_loader
 from src.library_reads.library_reads import LibraryReads
 from src.library_reads.preprocessor import FixPreProcessor
 from src.utils.pdf_generator import PDFGenerator
-
+from utils.config import basedir
 # Plotting setup
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -24,8 +24,9 @@ import seaborn as sns
 
 sns.set()
 sns.set_palette('muted')
-plt.rc("axes.spines", top=False, right=False) # Remove top and right borders. Looks nicer.
-mpl.rcParams['savefig.dpi'] = 300 # Save plot will be in a higher resolution.
+plt.rc("axes.spines", top=False, right=False)  # Remove top and right borders. Looks nicer.
+mpl.rcParams['savefig.dpi'] = 300  # Save plot will be in a higher resolution.
+
 
 # TODO move file names to another file.
 class DatasetFiles(object):
@@ -41,8 +42,9 @@ class DatasetFiles(object):
 
     TOY = "toy_data"
     TOY_FOLDER = "data/toy_data/"
-
-
+BASE_DIR = os.getcwd()+os.sep
+if os.environ.get('mode') == 'prod':
+    BASE_DIR = '/home/omersabary/DNA-storage-web/'
 DATASET_FOLDER = DatasetFiles.TOY_FOLDER
 DATASET_FILE = DatasetFiles.TOY
 
@@ -68,7 +70,7 @@ def get_library_reads_and_design(reads_file, design_file, override=False):
     matched_file = Path("{}_after_matching.csv".format(read_file_noprefix))
     config_file = Path(read_file_noprefix + DATASET_CONFIG_SUFFIX)
 
-    sequences = library_loader.load_library(DATASET_FOLDER+ DATASET_FILE+DATASET_READS_SUFFIX, True, NREADS)
+    sequences = library_loader.load_library(DATASET_FOLDER + DATASET_FILE + DATASET_READS_SUFFIX, True, NREADS)
 
     if aligned_file.exists() and not override:
         library_reads = LibraryReads(str(aligned_file))
@@ -98,7 +100,7 @@ def get_library_reads_and_design_simple(design_file, read_metafile, config_file)
     sequences = library_loader.load_library(reads_file_names)
 
     library_reads = LibraryReads(sequences)
-    print('DEBUG: the type of library_reads is'+str(type(library_reads)))
+    print('DEBUG: the type of library_reads is' + str(type(library_reads)))
     library_reads.set_config_file(config_file)
     library_reads.set_original_sequences(sequences)
 
@@ -129,7 +131,7 @@ def match_reads_to_design(library_reads, library_design):
     variant_matcher.add_aligner(aligner)
 
     library_reads.match_sequences(variant_matcher)
-    library_reads.save_library_state("{}_after_matching.csv".format(DATASET_FOLDER+DATASET_FILE))
+    library_reads.save_library_state("{}_after_matching.csv".format(DATASET_FOLDER + DATASET_FILE))
 
     matched_count = library_reads.get_matched_reads_count()
     un_matched_count = library_reads.get_unmatched_reads_count()
@@ -142,7 +144,7 @@ def align_reads_to_variants(library_reads, library_design):
     print("\n| Aligning reads to design")
     library_reads.compute_edit_distance(library_design)
 
-    library_reads.save_library_state("{}_after_alignment.csv".format(DATASET_FOLDER+DATASET_FILE))
+    library_reads.save_library_state("{}_after_alignment.csv".format(DATASET_FOLDER + DATASET_FILE))
     print(" - Finished read alignment")
 
 
@@ -153,7 +155,7 @@ def analyze_library(library_reads, library_design, time_stamp=""):
     analyzers = [GeneralAnalyzer(),
                  ReadLengthAnalyzer(),
                  VariantDistributionAnalyzer()]
-                 #DeletionPositionPerBaseAnalyzer({'longest_sequence': library_design.get_design_longest_sequence()})]
+    # DeletionPositionPerBaseAnalyzer({'longest_sequence': library_design.get_design_longest_sequence()})]
 
     for analyzer in analyzers:
         contents.append(analyzer.analyze(library_reads, library_design))
@@ -174,20 +176,20 @@ if __name__ == "__main__":
         os.makedirs("temp")
 
     time_stamp = ""
-    if len(sys.argv) == 1: # if no arguments are passed try to retrieve data from CONSTS.
-        lr_obj, ld_obj = get_library_reads_and_design(DATASET_FOLDER+DATASET_FILE+DATASET_READS_SUFFIX,
-                                                      DATASET_FOLDER+DATASET_FILE+DATASET_DESIGN_SUFFIX,
+    if len(sys.argv) == 1:  # if no arguments are passed try to retrieve data from CONSTS.
+        lr_obj, ld_obj = get_library_reads_and_design(DATASET_FOLDER + DATASET_FILE + DATASET_READS_SUFFIX,
+                                                      DATASET_FOLDER + DATASET_FILE + DATASET_DESIGN_SUFFIX,
                                                       OVERRIDE)
-    elif len(sys.argv) == 2:   #if we have on argument is the user_id
-        DATASET_FOLDER = 'input_files_dir/'
+    elif len(sys.argv) == 2:  # if we have on argument is the user_id
+        DATASET_FOLDER = BASE_DIR+'input_files_dir' + os.sep
         DATASET_FILE = sys.argv[1]
-        OVERRIDE  = False
+        OVERRIDE = False
         time_stamp = sys.argv[1]
-        lr_obj, ld_obj = get_library_reads_and_design(DATASET_FOLDER+DATASET_FILE+DATASET_READS_SUFFIX,
-                                                      DATASET_FOLDER+DATASET_FILE+DATASET_DESIGN_SUFFIX,
+        lr_obj, ld_obj = get_library_reads_and_design(DATASET_FOLDER + DATASET_FILE + DATASET_READS_SUFFIX,
+                                                      DATASET_FOLDER + DATASET_FILE + DATASET_DESIGN_SUFFIX,
                                                       OVERRIDE)
 
-    else: # Otherwise use supplied arguments to retrieve data.
+    else:  # Otherwise use supplied arguments to retrieve data.
         assert len(sys.argv) > 3, "You must supply 3 arguments : design file path, reads file path, config file path"
         design_file = sys.argv[1]
         reads_file = sys.argv[2]

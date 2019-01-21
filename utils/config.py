@@ -5,26 +5,23 @@ import smtplib
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-import itertools
-import datetime
-import subprocess
-import sys
 from flask_wtf import CsrfProtect
+
 # ############# WORKING DIR #####################################
 input_files_dir = 'input_files_dir'
-tool_name= 'main.py'
+tool_name = 'main.py'
 sep = os.sep
 # basedir = 'C:' + sep + 'Users' + sep + 'grodan' + sep + 'PycharmProjects' + sep + 'DNA-storage-web'
 basedir = os.getcwd()
-tool_name= 'main.py'
+tool_name = 'main.py'
 tool_path = basedir + sep + 'utils' + sep + tool_name
-tool_sub_path = '\eitans_files\Library-Analyzer-master\\'
+tool_sub_path = sep+'eitans_files'+sep+'Library-Analyzer-master'+sep
 # ############# SET EMAIL #####################################
 
 config = []
 
 if os.environ.get('mode') == 'prod':
-    basedir='/home/omersabary/DNA-storage-web'
+    basedir = '/home/omersabary/DNA-storage-web'
     with open('/etc/config.json') as config_file:
         config = json.load(config_file)
     email = config.get('email')
@@ -44,6 +41,7 @@ try:
 except:
     print("Couldn't setup email!!")
 
+
 # ############# APP CONFIG #####################################
 
 
@@ -61,6 +59,7 @@ def get_app(name):
     app.config['MAIL_USE_TLS'] = False
     app.config['MAIL_USE_SSL'] = True
     app.config['PROPAGATE_EXCEPTIONS'] = True
+    app.config['MAX_CONTENT_LENGTH'] = 3 * 1024 * 1024 * 1024
     db = SQLAlchemy(app)
     csrf.init_app(app)
     return db, app
@@ -75,7 +74,7 @@ def get_id():
 
 
 def get_tool_path():
-    tool_path = get_dir()+tool_sub_path + tool_name
+    tool_path = get_dir() + tool_sub_path + tool_name
     return tool_path
 
 

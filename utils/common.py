@@ -1,31 +1,25 @@
 import datetime
-import json
 import re
-import time
-import os
 import subprocess
 import sys
-import traceback
 from email.header import Header
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from os.path import basename
-from utils.config import *
 from time import *
 
+from utils.config import *
 
-def PrepareDict(files_list):
-    files_dict = {}
-    files_dict['design.csv'] = files_list[0]
-    files_dict['after_alignment.csv'] = files_list[1]
-    files_dict['after_matching.csv'] = files_list[2]
-    files_dict['reads.fastq'] = files_list[3]
+
+def prepare_dict(files_list):
+    files_dict = {'design.csv': files_list[0], 'after_alignment.csv': files_list[1],
+                  'after_matching.csv': files_list[2], 'reads.fastq': files_list[3]}
     return files_dict
 
 
-def SaveFilesOnServer(files_list, run_id):
-    files_dict = PrepareDict(files_list)
+def save_files_on_server(files_list, run_id):
+    files_dict = prepare_dict(files_list)
     debug_print("in SaveFilesOnServer")
     if not os.path.isdir(get_dir() + os.sep + input_files_dir):
         debug_print('in SaveFilesOnServer: the input path didnt exist')
@@ -41,14 +35,14 @@ def debug_print(message):
     print("\n*****DEBUG: " + str(current_time) + " - " + str(message) + " ****************\n")
 
 
-def timeDiff(time1, time2):
+def time_diff(time1, time2):
     timeA = datetime.datetime.strptime(time1, "%H:%M:%S")
     timeB = datetime.datetime.strptime(time2, "%H:%M:%S")
     newTime = timeA - timeB
     return newTime
 
 
-def DeleteSavedFiles(run_id):
+def delete_saved_files(run_id):
     path_to_files = get_dir() + os.sep + input_files_dir + os.sep
     debug_print('in DeleteSavedFiles\nthe path to files is ' + str(path_to_files))
     file_suffixes = ['_design.csv', '_after_alignment.csv', '_after_matching.csv', '_reads.fastq']
@@ -59,8 +53,8 @@ def DeleteSavedFiles(run_id):
             debug_print('the file ' + str(path_to_files) + str(run_id) + str(suffix) + 'didnt exist')
 
 
-def RunDNATool(tool_path, run_id, analyzers, email):
-    cmd = [sys.executable, tool_path, str(run_id)]
+def run_dna_tool(dna_tool_path, run_id, analyzers, email):
+    cmd = [sys.executable, dna_tool_path, str(run_id)]
     # debug_print('b4 process. the cmd is ' + cmd)
     start_time = strftime("%H:%M:%S", gmtime())
     try:
@@ -68,14 +62,15 @@ def RunDNATool(tool_path, run_id, analyzers, email):
         path_to_output = get_dir() + os.sep + str(run_id) + '_report.pdf'
         if os.path.exists(path_to_output):
             debug_print('file is existing.\n\tNOW EMAIL CODE')
-            # send_good_results(email,start_time,path_to_output)
+            send_good_results(email, start_time, path_to_output)
             # send_mail_aux(email,start_time,path_to_output)
         else:
             debug_print('file is None')
     except Exception as e:
-        debug_print('there was an err')
-        debug_print(e.output)
-        err=str(e.output)
+        debug_print('there was an err:')
+        for line in e.output.decode('utf-8').split('\n'):
+            print(line)
+        err = str(e.output)
         traceback_regex = re.search(r'Traceback \(most recent call last\)[\S\s]*', err)
         if traceback_regex:
             traceback_str = traceback_regex.group()
@@ -83,11 +78,13 @@ def RunDNATool(tool_path, run_id, analyzers, email):
             # end_time = strftime("%H:%M:%S", gmtime())
             # run_time = timeDiff(end_time, start_time)
             # time.sleep(7)
-            debug_print('THE TRACEBACK\n' + traceback_str)
+            debug_print('THE TRACEBACK\n')
+            for line in traceback_str.decode('utf-8').split('\n'):
+                print(line)
         # send_bad_results(email, start_time,run_time,traceback_str)
     finally:
         debug_print("in Finally statement")
-        DeleteSavedFiles(run_id)
+        delete_saved_files(run_id)
 
 
 def send_bad_results(email, start_time, run_time, traceback_str):
@@ -139,7 +136,7 @@ def send_good_results(email, time):
         msg['From'] = os.environ.get('email')
     file = get_dir() + os.sep + 'Output.pdf'
     plain = ' your DNA-STORAGE-TOOL results of run that started on: 0 are now available to Download'
-    if (contains_non_ascii_characters(plain)):
+    if contains_non_ascii_characters(plain):
         plain_text = MIMEText(plain.encode('utf-8'), 'plain', 'utf-8')
     else:
         plain_text = MIMEText(plain, 'plain')
