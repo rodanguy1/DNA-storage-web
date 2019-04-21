@@ -13,7 +13,6 @@ tool_name = 'main.py'
 sep = os.sep
 # basedir = 'C:' + sep + 'Users' + sep + 'grodan' + sep + 'PycharmProjects' + sep + 'DNA-storage-web'
 basedir = os.getcwd()
-tool_name = 'main.py'
 tool_path = basedir + sep + 'utils' + sep + tool_name
 tool_sub_path = sep+'eitans_files'+sep+'Library-Analyzer-master'+sep
 # ############# SET EMAIL #####################################

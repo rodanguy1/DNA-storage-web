@@ -1,17 +1,38 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h2>Last X results:</h2>
-    {% for res in results %}
-
-        <article class="media content-section">
-          <div class="media-body">
-            <div class="article-metadata" >
-              <a class="mr-2" href="#">Build #{{ res.build_number }}</a>
-              <small class="text-muted"> Build_on : {{ res.time_stamp }}</small>
-                <small class="text-muted">Run Result : {{res.result }}</small>
-            </div>
-          </div>
-        </article>
-    {% endfor %}
-
+    <h1>About Us:</h1>
+<br>
+<h2>SOLQC - Synthetic Oligo Libraries Quality Control Tool</h2>
+<p>Recent years have seen a growing use of Synthetic Oligo libraries for
+    various usage in the synthetic biology realm. The production of synthetic
+    DNA libraries consists of two main processes: Synthesis, where new DNA molecules
+    are generated according to a given design, and Sequencing, where the synthesized
+    DNA molecules are read. Unfortunately, each of these processes is not error-free
+    and can introduce a significant number of errors, mostly of three types: deletions,
+    insertions, and substitutions. Thus, the synthetic DNA libraries are likely to be
+    erroneous. As experiments are growing by numbers and complexity, better analysis
+    tools are required to facilitate and validate the results, as well as understanding
+    and comparing the error behavior in different synthetic DNA libraries.</p>
+<br>
+<br>
+<p>In this project, we present a novel analysis tool, SOLQC, which enables fast and
+    comprehensive analysis of synthetic oligo libraries enabling the user comprehensive
+    information and insights about the quality and state of the library. The input of our
+    tool is an existing synthetic DNA library: The designed variants and the sequenced reads.
+    First, the tool matches between each read and its designed variant. Then, based on this
+    matching, the tool collects data on the errors occurred both in the synthesis and the
+    sequencing processes. The tool analyzes the error behavior and provides a custom report,
+    which consists of plots and graphs that summarize the statistical evaluation and analysis
+    of the error behavior in the given library. The data and the plots in the report can be
+    manually selected by the user according to his interests.</p>
+<br>
+<br>
+<br>
+<h6>
+    Website Creators:
+</h6>
+<ul>
+    <li>Guy Rodan - rodanguy@gmail.com</li>
+    <li>Eitan Fredman Ganeles - eitanganeles@gmail.com</li>
+</ul>
 {% endblock %}

@@ -19,9 +19,9 @@ def prepare_dict(files_list):
 
 def save_files_on_server(files_list, run_id):
     files_dict = prepare_dict(files_list)
-    debug_print("in SaveFilesOnServer")
+    # debug_print("in SaveFilesOnServer")
     if not os.path.isdir(get_dir() + os.sep + input_files_dir):
-        debug_print('in SaveFilesOnServer: the input path didnt exist')
+        # debug_print('in SaveFilesOnServer: the input path didnt exist')
         os.mkdir(get_dir() + os.sep + input_files_dir)
     directory_path = get_dir() + os.sep + input_files_dir + os.sep
     for name, fd in files_dict.items():
@@ -43,13 +43,13 @@ def time_diff(time1, time2):
 
 def delete_saved_files(run_id):
     path_to_files = get_dir() + os.sep + input_files_dir + os.sep
-    debug_print('in DeleteSavedFiles\nthe path to files is ' + str(path_to_files))
+    # debug_print('in DeleteSavedFiles\nthe path to files is ' + str(path_to_files))
     file_suffixes = ['_design.csv', '_after_alignment.csv', '_after_matching.csv', '_reads.fastq']
     for suffix in file_suffixes:
         if os.path.exists(str(path_to_files) + str(run_id) + str(suffix)):
             os.remove(str(path_to_files) + str(run_id) + str(suffix))
         else:
-            debug_print('the file ' + str(path_to_files) + str(run_id) + str(suffix) + 'didnt exist')
+            debug_print('Error: the file ' + str(path_to_files) + str(run_id) + str(suffix) + 'didnt exist')
 
 
 def run_dna_tool(tool_path, run_id, analyzers, email):
@@ -60,12 +60,12 @@ def run_dna_tool(tool_path, run_id, analyzers, email):
         process_output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
         path_to_output = get_dir() + os.sep + str(run_id) + '_report.pdf'
         if os.path.exists(path_to_output):
-            debug_print('\nreport.pdf file is existing.\n\tNOW EMAIL CODE')
             send_good_results(email,start_time,path_to_output)
-            # send_mail_aux(email,start_time,path_to_output)
         else:
-            debug_print('file is None')
+            # send_bad_results
+            pass
     except Exception as e:
+        # send_bad_results
         debug_print('there was an err:')
         for line in e.output.decode('utf-8').split('\n'):
             print(line)
@@ -73,38 +73,17 @@ def run_dna_tool(tool_path, run_id, analyzers, email):
         traceback_regex = re.search(r'Traceback \(most recent call last\)[\S\s]*', err)
         if traceback_regex:
             traceback_str = traceback_regex.group()
-            # traceback_str = traceback.format_exc()
-            # end_time = strftime("%H:%M:%S", gmtime())
-            # run_time = timeDiff(end_time, start_time)
-            # time.sleep(7)
             debug_print('THE TRACEBACK\n')
             for line in traceback_str.split('\n'):
                 print(line)
-        # send_bad_results(email, start_time,run_time,traceback_str)
+        send_bad_results(email, start_time,run_time,traceback_str)
     finally:
         debug_print("in Finally statement")
         delete_saved_files(run_id)
 
 
 def send_bad_results(email, start_time, run_time, traceback_str):
-    msg = MIMEMultipart()
-    msg['Subject'] = 'DNA-STORAGE-TOOL Run FAILED!'
-    msg['To'] = ','.join([email])
-    msg['From'] = os.environ.get('email')
-    msg.attach(
-        MIMEText('Hello,\nYour DNA-STORAGE-TOOL run that started on: ' + start_time + ' failed.'
-                                                                                      '\nYour total runtime was: ' + str(
-            run_time) + '.'
-                        '\nThe traceback for the error was:\n' + str(traceback_str) +
-                 '\n\nFor more info regarding your failure please contact the tool owners.'
-                 '\nTheir info is on the website.'
-                 '\nThanks! See you next time!'))
-    try:
-        # get_mail().sendmail()
-        get_mail().send_message(msg)
-    except Exception as e:
-        debug_print('COULDNT SEND BAD MAIL')
-        debug_print(e.message)
+    pass
 
 
 def contains_non_ascii_characters(str):
@@ -134,7 +113,7 @@ def send_good_results(email, time,path_to_output):
         msg['From'] = email
     else:
         msg['From'] = os.environ.get('email')
-    plain = ' your DNA-STORAGE-TOOL results of run that started on: 0 are now available to Download'
+    plain = ' your DNA-STORAGE-TOOL results of run that started on: '+ str(time)+' are now available to Download'
     if contains_non_ascii_characters(plain):
         plain_text = MIMEText(plain.encode('utf-8'), 'plain', 'utf-8')
     else:
