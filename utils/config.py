@@ -58,7 +58,7 @@ def get_app(name):
     app.config['MAIL_USE_TLS'] = False
     app.config['MAIL_USE_SSL'] = True
     app.config['PROPAGATE_EXCEPTIONS'] = True
-    app.config['MAX_CONTENT_LENGTH'] = 3 * 1024 * 1024 * 1024
+    app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024 * 1024
     db = SQLAlchemy(app)
     csrf.init_app(app)
     return db, app
